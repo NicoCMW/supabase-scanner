@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { trackScanStarted, trackScanCompleted } from "@/lib/analytics/gtag";
 
 interface ScanFormProps {
   readonly onScanComplete: (result: unknown) => void;
@@ -15,6 +16,7 @@ export function ScanForm({ onScanComplete, onScanError }: ScanFormProps) {
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
     setScanning(true);
+    trackScanStarted();
 
     try {
       const response = await fetch("/api/scan", {
@@ -30,6 +32,8 @@ export function ScanForm({ onScanComplete, onScanError }: ScanFormProps) {
         return;
       }
 
+      const result = data as { grade: string; totalFindings: number; durationMs: number };
+      trackScanCompleted(result.grade, result.totalFindings, result.durationMs);
       onScanComplete(data);
     } catch {
       onScanError("Network error. Please try again.");

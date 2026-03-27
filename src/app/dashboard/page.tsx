@@ -1,7 +1,9 @@
+import { Suspense } from "react";
 import { redirect } from "next/navigation";
 import { createSupabaseServer } from "@/lib/supabase/server";
 import { ScanHistory } from "@/components/scan-history";
 import { UsageBanner } from "@/components/usage-banner";
+import { AnalyticsEvents } from "@/components/analytics-events";
 import type { Grade } from "@/types/scanner";
 
 interface ScanJobRow {
@@ -58,6 +60,9 @@ export default async function DashboardPage() {
         </div>
       </header>
 
+      <Suspense>
+        <AnalyticsEvents />
+      </Suspense>
       <UsageBanner />
       <ScanHistory scanJobs={(scanJobs ?? []) as readonly ScanJobRow[]} />
     </main>

@@ -1,9 +1,12 @@
 import { NextRequest, NextResponse } from "next/server";
+import * as Sentry from "@sentry/nextjs";
 import { runScan, validateTarget } from "@/lib/scanner";
 import { createSupabaseServer } from "@/lib/supabase/server";
 import { createSupabaseAdmin } from "@/lib/supabase/admin";
 import { checkScanAllowed, incrementUsage } from "@/lib/billing/usage";
-import type { ScanTarget } from "@/types/scanner";
+import { getOrCreatePreferences, buildUnsubscribeUrl } from "@/lib/email/preferences";
+import { sendScanResultsEmail } from "@/lib/email/send";
+import type { ScanTarget, Severity } from "@/types/scanner";
 
 export const maxDuration = 60;
 
@@ -122,6 +125,34 @@ export async function POST(request: NextRequest) {
     const adminClient = createSupabaseAdmin();
     await incrementUsage(adminClient, user.id);
 
+    // Send scan results email (fire-and-forget, don't block response)
+    const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? "https://supascanner.com";
+    getOrCreatePreferences(adminClient, user.id)
+      .then((prefs) => {
+        if (!prefs.scan_results_email) return;
+
+        const allFindings = result.modules.flatMap((m) => m.findings);
+        const countBySeverity = (s: Severity) =>
+          allFindings.filter((f) => f.severity === s).length;
+
+        return sendScanResultsEmail(user.email ?? "", {
+          userName: user.email?.split("@")[0] ?? "there",
+          grade: result.grade,
+          totalFindings: result.totalFindings,
+          criticalCount: countBySeverity("critical"),
+          highCount: countBySeverity("high"),
+          mediumCount: countBySeverity("medium"),
+          lowCount: countBySeverity("low"),
+          scanUrl: `${siteUrl}/scan/${scanJob.id}`,
+          unsubscribeUrl: buildUnsubscribeUrl(prefs.unsubscribe_token),
+        });
+      })
+      .catch((err) => {
+        Sentry.captureException(err, {
+          extra: { context: "scan_results_email", userId: user.id },
+        });
+      });
+
     return NextResponse.json({
       scanJobId: scanJob.id,
       grade: result.grade,
@@ -132,6 +163,10 @@ export async function POST(request: NextRequest) {
       completedAt: result.completedAt,
     });
   } catch (error) {
+    Sentry.captureException(error, {
+      extra: { scanJobId: scanJob.id, userId: user.id },
+    });
+
     // Mark scan job as failed
     await supabase
       .from("scan_jobs")

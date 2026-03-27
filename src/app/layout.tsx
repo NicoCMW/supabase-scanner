@@ -1,4 +1,7 @@
 import type { Metadata } from "next";
+import { Analytics } from "@vercel/analytics/next";
+import { SpeedInsights } from "@vercel/speed-insights/next";
+import { GoogleAnalytics } from "@/components/google-analytics";
 import { siteConfig } from "@/lib/seo/config";
 import { softwareApplicationJsonLd } from "@/lib/seo/json-ld";
 import "./globals.css";
@@ -42,6 +45,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className="antialiased bg-sand-50 text-sand-900 min-h-screen font-sans">
+        <GoogleAnalytics />
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{
@@ -49,6 +53,8 @@ export default function RootLayout({
           }}
         />
         {children}
+        <Analytics />
+        <SpeedInsights />
       </body>
     </html>
   );

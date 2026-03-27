@@ -11,16 +11,21 @@
     "test:watch": "vitest"
   },
   "dependencies": {
+    "@react-email/components": "^1.0.10",
+    "@sentry/nextjs": "^10.46.0",
     "@supabase/ssr": "^0.9.0",
     "@supabase/supabase-js": "^2.100.1",
     "@tailwindcss/postcss": "^4.2.2",
     "@types/node": "^25.5.0",
     "@types/react": "^19.2.14",
     "@types/react-dom": "^19.2.3",
+    "@vercel/analytics": "^2.0.1",
+    "@vercel/speed-insights": "^2.0.0",
     "next": "^16.2.1",
     "postcss": "^8.5.8",
     "react": "^19.2.4",
     "react-dom": "^19.2.4",
+    "resend": "^6.9.4",
     "stripe": "^21.0.1",
     "tailwindcss": "^4.2.2",
     "typescript": "^6.0.2"
