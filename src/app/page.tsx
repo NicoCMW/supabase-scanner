@@ -1,36 +1,14 @@
-"use client";
+import { createSupabaseServer } from "@/lib/supabase/server";
+import { redirect } from "next/navigation";
 
-import { useState } from "react";
-import { ScanForm } from "@/components/scan-form";
-import { ScanResults } from "@/components/scan-results";
-import type { Grade, ScanModuleResult } from "@/types/scanner";
+export default async function Home() {
+  const supabase = await createSupabaseServer();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
 
-interface ScanResponse {
-  readonly grade: Grade;
-  readonly totalFindings: number;
-  readonly modules: readonly ScanModuleResult[];
-  readonly durationMs: number;
-  readonly startedAt: string;
-  readonly completedAt: string;
-}
-
-export default function Home() {
-  const [result, setResult] = useState<ScanResponse | null>(null);
-  const [error, setError] = useState<string | null>(null);
-
-  function handleScanComplete(data: unknown) {
-    setError(null);
-    setResult(data as ScanResponse);
-  }
-
-  function handleScanError(message: string) {
-    setResult(null);
-    setError(message);
-  }
-
-  function handleReset() {
-    setResult(null);
-    setError(null);
+  if (user) {
+    redirect("/dashboard");
   }
 
   return (
@@ -40,27 +18,14 @@ export default function Home() {
         Scan your Supabase project for common security misconfigurations.
         Check RLS policies, storage permissions, and auth settings in seconds.
       </p>
-
-      {error && (
-        <div className="w-full max-w-xl mb-6 p-3 bg-red-950/50 border border-red-800 rounded-lg text-red-400 text-sm">
-          {error}
-        </div>
-      )}
-
-      {result ? (
-        <ScanResults
-          grade={result.grade}
-          totalFindings={result.totalFindings}
-          modules={result.modules}
-          durationMs={result.durationMs}
-          onReset={handleReset}
-        />
-      ) : (
-        <ScanForm
-          onScanComplete={handleScanComplete}
-          onScanError={handleScanError}
-        />
-      )}
+      <div className="flex gap-4">
+        <a
+          href="/login"
+          className="px-6 py-2.5 bg-emerald-600 hover:bg-emerald-500 text-white font-medium rounded-lg transition-colors"
+        >
+          Get Started
+        </a>
+      </div>
     </main>
   );
 }
