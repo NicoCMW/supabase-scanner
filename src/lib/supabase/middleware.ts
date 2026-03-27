@@ -38,6 +38,8 @@ export async function updateSession(request: NextRequest) {
     pathname === "/blog" ||
     pathname.startsWith("/blog/") ||
     pathname === "/pricing" ||
+    pathname === "/privacy" ||
+    pathname === "/terms" ||
     pathname === "/security-checklist" ||
     pathname === "/sitemap.xml" ||
     pathname === "/robots.txt" ||

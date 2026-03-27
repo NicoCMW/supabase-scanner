@@ -245,7 +245,15 @@ export default async function Home() {
       </section>
 
       <footer className="px-8 py-8 max-w-5xl mx-auto border-t border-sand-200 text-center text-xs text-sand-400">
-        SupaScanner. Your credentials are never persisted.
+        <p className="mb-2">SupaScanner. Your credentials are never persisted.</p>
+        <div className="flex items-center justify-center gap-4">
+          <a href="/privacy" className="hover:text-sand-600 transition-colors">
+            Privacy Policy
+          </a>
+          <a href="/terms" className="hover:text-sand-600 transition-colors">
+            Terms of Service
+          </a>
+        </div>
       </footer>
     </main>
   );
