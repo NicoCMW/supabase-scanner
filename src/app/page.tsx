@@ -1,5 +1,15 @@
+import type { Metadata } from "next";
 import { createSupabaseServer } from "@/lib/supabase/server";
+import { siteConfig } from "@/lib/seo/config";
 import { redirect } from "next/navigation";
+
+export const metadata: Metadata = {
+  title: "SupaScanner - Find RLS Gaps Before Your Users Do",
+  description: siteConfig.description,
+  alternates: {
+    canonical: siteConfig.url,
+  },
+};
 
 export default async function Home() {
   const supabase = await createSupabaseServer();
@@ -18,6 +28,12 @@ export default async function Home() {
           SupaScanner
         </span>
         <div className="flex items-center gap-6">
+          <a
+            href="/blog"
+            className="text-sm text-sand-500 hover:text-sand-900 transition-colors"
+          >
+            Blog
+          </a>
           <a
             href="/pricing"
             className="text-sm text-sand-500 hover:text-sand-900 transition-colors"
