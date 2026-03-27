@@ -2,6 +2,7 @@ import { notFound, redirect } from "next/navigation";
 import { createSupabaseServer } from "@/lib/supabase/server";
 import { GradeBadge } from "@/components/grade-badge";
 import { FindingCard } from "@/components/finding-card";
+import { ShareButton } from "@/components/share-button";
 import type { Grade, Severity, FindingCategory, Finding } from "@/types/scanner";
 
 interface FindingRow {
@@ -87,12 +88,17 @@ export default async function ScanDetailPage({ params }: PageProps) {
           <h1 className="text-xl font-semibold text-sand-900">Scan Results</h1>
           <p className="text-sm text-sand-400">{scanJob.supabase_url}</p>
         </div>
-        <a
-          href="/dashboard"
-          className="text-sm text-sand-400 hover:text-sand-900 transition-colors"
-        >
-          Back to dashboard
-        </a>
+        <div className="flex items-center gap-4">
+          {scanJob.status === "completed" && scanJob.grade && (
+            <ShareButton scanJobId={id} />
+          )}
+          <a
+            href="/dashboard"
+            className="text-sm text-sand-400 hover:text-sand-900 transition-colors"
+          >
+            Back to dashboard
+          </a>
+        </div>
       </header>
 
       {scanJob.grade && (
