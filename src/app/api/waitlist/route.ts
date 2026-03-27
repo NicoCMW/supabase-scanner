@@ -17,9 +17,15 @@ export async function POST(request: Request) {
 
     const supabase = createSupabaseAdmin();
 
+    const VALID_SOURCES = ["landing_page", "security_checklist"] as const;
+    const rawSource = typeof body.source === "string" ? body.source : "landing_page";
+    const source = VALID_SOURCES.includes(rawSource as typeof VALID_SOURCES[number])
+      ? rawSource
+      : "landing_page";
+
     const { error } = await supabase
       .from("waitlist")
-      .insert({ email, source: "landing_page" });
+      .insert({ email, source });
 
     if (error) {
       // Unique constraint violation = duplicate email

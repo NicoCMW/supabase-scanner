@@ -30,6 +30,12 @@ export default async function Home() {
         </span>
         <div className="flex items-center gap-6">
           <a
+            href="/security-checklist"
+            className="text-sm text-sand-500 hover:text-sand-900 transition-colors"
+          >
+            Checklist
+          </a>
+          <a
             href="/blog"
             className="text-sm text-sand-500 hover:text-sand-900 transition-colors"
           >
