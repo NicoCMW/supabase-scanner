@@ -20,50 +20,61 @@ export default function PricingPage() {
   }
 
   return (
-    <main className="min-h-screen bg-gray-950 text-white p-8">
-      <div className="max-w-4xl mx-auto">
-        <h1 className="text-4xl font-bold text-center mb-2">Pricing</h1>
-        <p className="text-gray-400 text-center mb-12">
-          Scan your Supabase project for security vulnerabilities
+    <main className="min-h-screen p-8">
+      <div className="max-w-3xl mx-auto">
+        <nav className="mb-16">
+          <a
+            href="/"
+            className="text-base font-semibold tracking-tight text-sand-900"
+          >
+            SupaScanner
+          </a>
+        </nav>
+
+        <h1 className="text-3xl font-semibold text-center mb-2 text-sand-900">
+          Pricing
+        </h1>
+        <p className="text-sand-500 text-center mb-12 text-sm">
+          Scan your Supabase project for security vulnerabilities.
         </p>
 
-        <div className="grid md:grid-cols-2 gap-8">
-          {/* Free Plan */}
-          <div className="border border-gray-800 rounded-2xl p-8">
-            <h2 className="text-2xl font-bold mb-1">{PLANS.free.name}</h2>
+        <div className="grid md:grid-cols-2 gap-6 max-w-xl mx-auto">
+          <div className="border border-sand-200 rounded-xl p-7 bg-white">
+            <h2 className="text-lg font-semibold mb-1 text-sand-900">
+              {PLANS.free.name}
+            </h2>
             <div className="mb-6">
-              <span className="text-4xl font-bold">$0</span>
-              <span className="text-gray-400">/month</span>
+              <span className="text-3xl font-semibold text-sand-900">$0</span>
+              <span className="text-sand-400 text-sm">/month</span>
             </div>
-            <ul className="space-y-3 mb-8 text-gray-300">
-              <li>
-                {PLANS.free.scansPerMonth} scans per month
-              </li>
+            <ul className="space-y-2.5 mb-8 text-sand-600 text-sm">
+              <li>{PLANS.free.scansPerMonth} scans per month</li>
               <li>All security checks included</li>
               <li>AI-powered fix suggestions</li>
               <li>Scan history</li>
             </ul>
             <a
               href="/login"
-              className="block w-full text-center py-3 rounded-lg border border-gray-700 hover:border-gray-500 transition-colors"
+              className="block w-full text-center py-2.5 rounded-lg border border-sand-200 hover:border-sand-300 text-sand-700 font-medium text-sm transition-colors"
             >
-              Get Started
+              Get started
             </a>
           </div>
 
-          {/* Pro Plan */}
-          <div className="border border-blue-600 rounded-2xl p-8 relative">
-            <div className="absolute -top-3 left-1/2 -translate-x-1/2 bg-blue-600 text-sm font-medium px-3 py-1 rounded-full">
+          <div className="border border-sand-900 rounded-xl p-7 bg-white relative">
+            <div className="absolute -top-2.5 left-1/2 -translate-x-1/2 bg-sand-900 text-white text-xs font-medium px-3 py-0.5 rounded-full">
               Recommended
             </div>
-            <h2 className="text-2xl font-bold mb-1">{PLANS.pro.name}</h2>
+            <h2 className="text-lg font-semibold mb-1 text-sand-900">
+              {PLANS.pro.name}
+            </h2>
             <div className="mb-6">
-              <span className="text-4xl font-bold">
+              <span className="text-3xl font-semibold text-sand-900">
                 ${PLANS.pro.priceMonthly}
               </span>
-              <span className="text-gray-400">/month</span>
+              <span className="text-sand-400 text-sm">/month</span>
             </div>
-            <ul className="space-y-3 mb-8 text-gray-300">
+            <ul className="space-y-2.5 mb-8 text-sand-600 text-sm">
               <li>Unlimited scans</li>
               <li>All security checks included</li>
               <li>AI-powered fix suggestions</li>
@@ -73,7 +84,7 @@ export default function PricingPage() {
             <button
               onClick={handleUpgrade}
               disabled={loading}
-              className="block w-full text-center py-3 rounded-lg bg-blue-600 hover:bg-blue-500 transition-colors disabled:opacity-50"
+              className="block w-full text-center py-2.5 rounded-lg bg-sand-900 hover:bg-sand-700 text-white font-medium text-sm transition-colors disabled:opacity-50"
             >
               {loading ? "Redirecting..." : "Upgrade to Pro"}
             </button>

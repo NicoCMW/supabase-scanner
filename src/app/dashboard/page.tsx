@@ -27,28 +27,30 @@ export default async function DashboardPage() {
 
   const { data: scanJobs } = await supabase
     .from("scan_jobs")
-    .select("id, supabase_url, status, grade, total_findings, duration_ms, created_at")
+    .select(
+      "id, supabase_url, status, grade, total_findings, duration_ms, created_at",
+    )
     .order("created_at", { ascending: false })
     .limit(50);
 
   return (
-    <main className="min-h-screen p-8 max-w-4xl mx-auto">
+    <main className="min-h-screen p-8 max-w-3xl mx-auto">
       <header className="flex items-center justify-between mb-8">
         <div>
-          <h1 className="text-2xl font-bold">Dashboard</h1>
-          <p className="text-gray-400 text-sm">{user.email}</p>
+          <h1 className="text-xl font-semibold text-sand-900">Dashboard</h1>
+          <p className="text-sand-400 text-sm">{user.email}</p>
         </div>
         <div className="flex items-center gap-4">
           <a
             href="/scan"
-            className="px-4 py-2 bg-emerald-600 hover:bg-emerald-500 text-white text-sm font-medium rounded-lg transition-colors"
+            className="px-4 py-2 bg-sand-900 hover:bg-sand-700 text-white text-sm font-medium rounded-lg transition-colors"
           >
-            New Scan
+            New scan
           </a>
           <form action="/api/auth/signout" method="post">
             <button
               type="submit"
-              className="text-sm text-gray-400 hover:text-gray-200"
+              className="text-sm text-sand-400 hover:text-sand-900 transition-colors"
             >
               Sign out
             </button>

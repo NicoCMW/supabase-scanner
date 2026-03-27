@@ -37,19 +37,19 @@ export default function ScanPage() {
   }
 
   return (
-    <main className="min-h-screen p-8 max-w-4xl mx-auto">
+    <main className="min-h-screen p-8 max-w-3xl mx-auto">
       <header className="flex items-center justify-between mb-8">
-        <h1 className="text-2xl font-bold">New Scan</h1>
+        <h1 className="text-xl font-semibold text-sand-900">New Scan</h1>
         <button
           onClick={() => router.push("/dashboard")}
-          className="text-sm text-gray-400 hover:text-gray-200"
+          className="text-sm text-sand-400 hover:text-sand-900 transition-colors"
         >
-          Back to Dashboard
+          Back to dashboard
         </button>
       </header>
 
       {error && (
-        <div className="w-full max-w-xl mb-6 p-3 bg-red-950/50 border border-red-800 rounded-lg text-red-400 text-sm">
+        <div className="w-full max-w-xl mb-6 p-3 bg-red-50 border border-red-200 rounded-lg text-red-700 text-sm">
           {error}
         </div>
       )}
@@ -64,7 +64,7 @@ export default function ScanPage() {
         />
       ) : (
         <div className="flex flex-col items-center">
-          <p className="text-gray-400 mb-6 text-center max-w-xl">
+          <p className="text-sand-500 mb-6 text-center max-w-xl text-sm leading-relaxed">
             Enter your Supabase project URL and anon key to scan for security
             misconfigurations. Your credentials are never stored.
           </p>

@@ -1,6 +1,6 @@
 "use client";
 
-import type { Grade, Finding } from "@/types/scanner";
+import type { Grade } from "@/types/scanner";
 import type { ScanModuleResult } from "@/types/scanner";
 import { GradeBadge } from "./grade-badge";
 import { FindingCard } from "./finding-card";
@@ -21,7 +21,9 @@ export function ScanResults({
   onReset,
 }: ScanResultsProps) {
   const allFindings = modules.flatMap((m) => m.findings);
-  const criticalCount = allFindings.filter((f) => f.severity === "critical").length;
+  const criticalCount = allFindings.filter(
+    (f) => f.severity === "critical",
+  ).length;
   const highCount = allFindings.filter((f) => f.severity === "high").length;
   const mediumCount = allFindings.filter((f) => f.severity === "medium").length;
   const lowCount = allFindings.filter((f) => f.severity === "low").length;
@@ -29,36 +31,37 @@ export function ScanResults({
   return (
     <div className="w-full max-w-3xl space-y-8">
       <div className="flex items-center justify-between">
-        <h2 className="text-2xl font-bold">Scan Results</h2>
+        <h2 className="text-xl font-semibold text-sand-900">Scan Results</h2>
         <button
           onClick={onReset}
-          className="text-sm text-gray-400 hover:text-gray-200"
+          className="text-sm text-sand-400 hover:text-sand-900 transition-colors"
         >
-          New Scan
+          New scan
         </button>
       </div>
 
-      <div className="flex items-center gap-8 p-6 bg-gray-900 rounded-xl">
+      <div className="flex items-center gap-8 p-6 bg-white border border-sand-200 rounded-xl">
         <GradeBadge grade={grade} />
         <div className="flex-1 grid grid-cols-2 sm:grid-cols-4 gap-4">
-          <StatBox label="Critical" count={criticalCount} color="text-red-500" />
-          <StatBox label="High" count={highCount} color="text-orange-500" />
-          <StatBox label="Medium" count={mediumCount} color="text-yellow-500" />
-          <StatBox label="Low" count={lowCount} color="text-blue-500" />
+          <StatBox label="Critical" count={criticalCount} color="text-red-600" />
+          <StatBox label="High" count={highCount} color="text-orange-600" />
+          <StatBox label="Medium" count={mediumCount} color="text-amber-600" />
+          <StatBox label="Low" count={lowCount} color="text-blue-600" />
         </div>
       </div>
 
-      <p className="text-xs text-gray-500">
+      <p className="text-xs text-sand-400">
         {totalFindings} finding{totalFindings !== 1 ? "s" : ""} in{" "}
         {(durationMs / 1000).toFixed(1)}s
       </p>
 
       {modules.map((mod) => (
         <div key={mod.module}>
-          <h3 className="text-lg font-semibold mb-3 text-gray-200">
+          <h3 className="text-base font-semibold mb-3 text-sand-900">
             {mod.module}
-            <span className="text-sm font-normal text-gray-500 ml-2">
-              ({mod.findings.length} finding{mod.findings.length !== 1 ? "s" : ""})
+            <span className="text-sm font-normal text-sand-400 ml-2">
+              ({mod.findings.length} finding
+              {mod.findings.length !== 1 ? "s" : ""})
             </span>
           </h3>
           <div className="space-y-3">
@@ -66,7 +69,7 @@ export function ScanResults({
               <FindingCard key={finding.id} finding={finding} />
             ))}
             {mod.findings.length === 0 && (
-              <p className="text-sm text-gray-500 italic">No issues found.</p>
+              <p className="text-sm text-sand-400">No issues found.</p>
             )}
           </div>
         </div>
@@ -86,8 +89,8 @@ function StatBox({
 }) {
   return (
     <div className="text-center">
-      <div className={`text-2xl font-bold ${color}`}>{count}</div>
-      <div className="text-xs text-gray-500">{label}</div>
+      <div className={`text-2xl font-semibold ${color}`}>{count}</div>
+      <div className="text-xs text-sand-400">{label}</div>
     </div>
   );
 }

@@ -19,10 +19,10 @@ export function ScanHistory({ scanJobs }: ScanHistoryProps) {
   if (scanJobs.length === 0) {
     return (
       <div className="text-center py-16">
-        <p className="text-gray-400 text-lg mb-4">No scans yet</p>
+        <p className="text-sand-400 text-base mb-4">No scans yet</p>
         <a
           href="/scan"
-          className="text-emerald-500 hover:text-emerald-400 font-medium"
+          className="text-sand-900 hover:text-sand-600 font-medium text-sm underline underline-offset-2 transition-colors"
         >
           Run your first scan
         </a>
@@ -32,25 +32,25 @@ export function ScanHistory({ scanJobs }: ScanHistoryProps) {
 
   return (
     <div className="space-y-3">
-      <h2 className="text-lg font-semibold text-gray-200">Scan History</h2>
+      <h2 className="text-base font-semibold text-sand-900">Scan History</h2>
       {scanJobs.map((job) => (
         <a
           key={job.id}
           href={`/scan/${job.id}`}
-          className="flex items-center gap-4 p-4 bg-gray-900 rounded-lg hover:bg-gray-800/80 transition-colors"
+          className="flex items-center gap-4 p-4 bg-white border border-sand-200 rounded-lg hover:border-sand-300 transition-colors"
         >
           {job.grade ? (
             <GradeBadge grade={job.grade} size="sm" />
           ) : (
-            <div className="w-10 h-10 rounded-full bg-gray-700 flex items-center justify-center text-xs text-gray-400">
+            <div className="w-9 h-9 rounded-full border border-sand-200 flex items-center justify-center text-xs text-sand-400">
               {job.status === "running" ? "..." : "--"}
             </div>
           )}
           <div className="flex-1 min-w-0">
-            <p className="text-sm font-medium text-gray-100 truncate">
+            <p className="text-sm font-medium text-sand-900 truncate">
               {job.supabase_url}
             </p>
-            <p className="text-xs text-gray-500">
+            <p className="text-xs text-sand-400">
               {new Date(job.created_at).toLocaleDateString(undefined, {
                 month: "short",
                 day: "numeric",
@@ -64,10 +64,11 @@ export function ScanHistory({ scanJobs }: ScanHistoryProps) {
             </p>
           </div>
           <div className="text-right">
-            <p className="text-sm text-gray-300">
-              {job.total_findings} finding{job.total_findings !== 1 ? "s" : ""}
+            <p className="text-sm text-sand-600">
+              {job.total_findings} finding
+              {job.total_findings !== 1 ? "s" : ""}
             </p>
-            <p className="text-xs text-gray-500 capitalize">{job.status}</p>
+            <p className="text-xs text-sand-400 capitalize">{job.status}</p>
           </div>
         </a>
       ))}

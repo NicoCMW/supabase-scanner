@@ -37,14 +37,17 @@ export default function LoginPage() {
     return (
       <main className="flex min-h-screen flex-col items-center justify-center p-8">
         <div className="w-full max-w-sm text-center space-y-4">
-          <h1 className="text-2xl font-bold">Check your email</h1>
-          <p className="text-gray-400">
-            We sent a magic link to <strong className="text-gray-200">{email}</strong>.
-            Click the link to sign in.
+          <h1 className="text-xl font-semibold text-sand-900">
+            Check your email
+          </h1>
+          <p className="text-sand-500 text-sm leading-relaxed">
+            We sent a magic link to{" "}
+            <strong className="text-sand-900">{email}</strong>. Click the link
+            to sign in.
           </p>
           <button
             onClick={() => setSent(false)}
-            className="text-sm text-emerald-500 hover:text-emerald-400"
+            className="text-sm text-sand-500 hover:text-sand-900 underline underline-offset-2 transition-colors"
           >
             Use a different email
           </button>
@@ -57,14 +60,20 @@ export default function LoginPage() {
     <main className="flex min-h-screen flex-col items-center justify-center p-8">
       <div className="w-full max-w-sm space-y-6">
         <div className="text-center">
-          <h1 className="text-2xl font-bold">Sign in</h1>
-          <p className="text-gray-400 mt-2">
+          <a
+            href="/"
+            className="text-base font-semibold tracking-tight text-sand-900"
+          >
+            SupaScanner
+          </a>
+          <h1 className="text-xl font-semibold mt-6 text-sand-900">Sign in</h1>
+          <p className="text-sand-500 text-sm mt-1">
             Enter your email to receive a magic link.
           </p>
         </div>
 
         {error && (
-          <div className="p-3 bg-red-950/50 border border-red-800 rounded-lg text-red-400 text-sm">
+          <div className="p-3 bg-red-50 border border-red-200 rounded-lg text-red-700 text-sm">
             {error}
           </div>
         )}
@@ -73,7 +82,7 @@ export default function LoginPage() {
           <div>
             <label
               htmlFor="email"
-              className="block text-sm font-medium text-gray-300 mb-1"
+              className="block text-sm font-medium text-sand-700 mb-1.5"
             >
               Email address
             </label>
@@ -84,16 +93,16 @@ export default function LoginPage() {
               placeholder="you@example.com"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-              className="w-full px-3 py-2 bg-gray-900 border border-gray-700 rounded-lg text-gray-100 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-transparent"
+              className="w-full px-3 py-2 bg-white border border-sand-200 rounded-lg text-sand-900 placeholder-sand-400 focus:outline-none focus:ring-2 focus:ring-sand-900/10 focus:border-sand-300 transition-colors"
               disabled={loading}
             />
           </div>
           <button
             type="submit"
             disabled={loading}
-            className="w-full py-2.5 px-4 bg-emerald-600 hover:bg-emerald-500 disabled:bg-gray-700 disabled:text-gray-400 text-white font-medium rounded-lg transition-colors"
+            className="w-full py-2.5 px-4 bg-sand-900 hover:bg-sand-700 disabled:bg-sand-200 disabled:text-sand-400 text-white font-medium rounded-lg transition-colors text-sm"
           >
-            {loading ? "Sending..." : "Send Magic Link"}
+            {loading ? "Sending..." : "Send magic link"}
           </button>
         </form>
       </div>

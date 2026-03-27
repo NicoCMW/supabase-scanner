@@ -16,39 +16,33 @@ export function UsageBanner() {
   if (!usage) return null;
 
   const isLimited = usage.scansLimit !== Infinity;
-  const remaining = isLimited
-    ? usage.scansLimit - usage.scansUsed
-    : null;
+  const remaining = isLimited ? usage.scansLimit - usage.scansUsed : null;
 
   return (
-    <div className="flex items-center justify-between p-4 rounded-lg border border-gray-800 mb-6">
+    <div className="flex items-center justify-between p-4 rounded-lg border border-sand-200 bg-white mb-6">
       <div>
-        <span className="text-sm font-medium capitalize">
+        <span className="text-sm font-medium text-sand-900 capitalize">
           {usage.plan} Plan
         </span>
         {isLimited && (
-          <span className="text-sm text-gray-400 ml-3">
+          <span className="text-sm text-sand-400 ml-3">
             {remaining} of {usage.scansLimit} scans remaining this month
           </span>
         )}
         {!isLimited && (
-          <span className="text-sm text-gray-400 ml-3">
-            Unlimited scans
-          </span>
+          <span className="text-sm text-sand-400 ml-3">Unlimited scans</span>
         )}
       </div>
       <div className="flex items-center gap-3">
         {usage.plan === "free" && (
           <a
             href="/pricing"
-            className="text-sm text-blue-400 hover:text-blue-300"
+            className="text-sm text-sand-600 hover:text-sand-900 underline underline-offset-2 transition-colors"
           >
             Upgrade to Pro
           </a>
         )}
-        {usage.plan === "pro" && (
-          <ManageBillingButton />
-        )}
+        {usage.plan === "pro" && <ManageBillingButton />}
       </div>
     </div>
   );
@@ -74,9 +68,9 @@ function ManageBillingButton() {
     <button
       onClick={handleClick}
       disabled={loading}
-      className="text-sm text-gray-400 hover:text-gray-200 disabled:opacity-50"
+      className="text-sm text-sand-400 hover:text-sand-900 disabled:opacity-50 transition-colors"
     >
-      {loading ? "Loading..." : "Manage Billing"}
+      {loading ? "Loading..." : "Manage billing"}
     </button>
   );
 }

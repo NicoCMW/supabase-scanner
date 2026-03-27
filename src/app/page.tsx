@@ -13,96 +13,102 @@ export default async function Home() {
 
   return (
     <main className="min-h-screen">
-      {/* Nav */}
-      <nav className="flex items-center justify-between px-8 py-6 max-w-6xl mx-auto">
-        <span className="text-lg font-bold tracking-tight">
+      <nav className="flex items-center justify-between px-8 py-5 max-w-5xl mx-auto">
+        <span className="text-base font-semibold tracking-tight text-sand-900">
           SupaScanner
         </span>
         <div className="flex items-center gap-6">
-          <a href="/pricing" className="text-sm text-gray-400 hover:text-gray-200 transition-colors">
+          <a
+            href="/pricing"
+            className="text-sm text-sand-500 hover:text-sand-900 transition-colors"
+          >
             Pricing
           </a>
           <a
             href="/login"
-            className="text-sm px-4 py-2 bg-emerald-600 hover:bg-emerald-500 text-white font-medium rounded-lg transition-colors"
+            className="text-sm px-4 py-2 bg-sand-900 hover:bg-sand-700 text-white font-medium rounded-lg transition-colors"
           >
             Sign in
           </a>
         </div>
       </nav>
 
-      {/* Hero */}
-      <section className="px-8 pt-24 pb-20 max-w-4xl mx-auto text-center">
-        <div className="inline-block mb-6 px-3 py-1 text-xs font-medium text-emerald-400 bg-emerald-950/50 border border-emerald-800/40 rounded-full">
-          Non-destructive security scanning for Supabase
-        </div>
-        <h1 className="text-5xl sm:text-6xl font-bold tracking-tight leading-tight mb-6">
-          Find RLS gaps before<br />
-          <span className="text-emerald-400">your users do</span>
-        </h1>
-        <p className="text-gray-400 text-lg max-w-2xl mx-auto mb-10 leading-relaxed">
-          Paste your Supabase URL and anon key. In under 40 seconds you get an
-          A-F security grade, a list of every misconfigured table, bucket, and
-          auth setting, plus AI-generated SQL fixes you can copy straight into
-          the SQL editor.
+      <section className="px-8 pt-28 pb-24 max-w-3xl mx-auto text-center">
+        <p className="text-sm text-sand-400 tracking-wide uppercase mb-6">
+          Non-destructive security scanning
         </p>
-        <div className="flex items-center justify-center gap-4">
+        <h1 className="text-4xl sm:text-5xl font-semibold tracking-tight leading-[1.15] mb-6 text-sand-900">
+          Find RLS gaps before
+          <br />
+          your users do
+        </h1>
+        <p className="text-sand-500 text-lg max-w-xl mx-auto mb-10 leading-relaxed">
+          Paste your Supabase URL and anon key. In under 40 seconds you get a
+          security grade, a list of every misconfigured table, bucket, and auth
+          setting, plus SQL fixes you can copy straight into the editor.
+        </p>
+        <div className="flex items-center justify-center gap-3">
           <a
             href="/login"
-            className="px-8 py-3 bg-emerald-600 hover:bg-emerald-500 text-white font-semibold rounded-lg transition-colors text-base"
+            className="px-7 py-2.5 bg-sand-900 hover:bg-sand-700 text-white font-medium rounded-lg transition-colors text-sm"
           >
-            Scan for Free
+            Start scanning
           </a>
           <a
             href="#how-it-works"
-            className="px-8 py-3 border border-gray-700 hover:border-gray-500 text-gray-300 font-medium rounded-lg transition-colors text-base"
+            className="px-7 py-2.5 border border-sand-200 hover:border-sand-300 text-sand-600 font-medium rounded-lg transition-colors text-sm"
           >
-            How It Works
+            How it works
           </a>
         </div>
-        <p className="mt-4 text-xs text-gray-500">
+        <p className="mt-5 text-xs text-sand-400">
           3 free scans per month. No credit card required.
         </p>
       </section>
 
-      {/* What We Check */}
-      <section className="px-8 py-20 max-w-6xl mx-auto">
-        <h2 className="text-3xl font-bold text-center mb-4">
+      <section className="px-8 py-20 max-w-5xl mx-auto">
+        <h2 className="text-2xl font-semibold text-center mb-3 text-sand-900">
           Three audits, one scan
         </h2>
-        <p className="text-gray-400 text-center mb-14 max-w-xl mx-auto">
+        <p className="text-sand-500 text-center mb-14 max-w-lg mx-auto text-sm leading-relaxed">
           Every scan runs all three modules against your project. Nothing is
           written or modified -- every check is read-only.
         </p>
-        <div className="grid md:grid-cols-3 gap-8">
-          <div className="border border-gray-800 rounded-2xl p-8">
-            <div className="w-10 h-10 bg-red-950/60 border border-red-800/40 rounded-lg flex items-center justify-center mb-5 text-red-400 font-bold text-sm">
+        <div className="grid md:grid-cols-3 gap-6">
+          <div className="border border-sand-200 rounded-xl p-7 bg-white">
+            <div className="w-9 h-9 bg-red-50 rounded-lg flex items-center justify-center mb-5 text-red-600 font-semibold text-xs">
               RLS
             </div>
-            <h3 className="text-lg font-semibold mb-2">Row Level Security</h3>
-            <p className="text-gray-400 text-sm leading-relaxed">
+            <h3 className="text-base font-semibold mb-2 text-sand-900">
+              Row Level Security
+            </h3>
+            <p className="text-sand-500 text-sm leading-relaxed">
               Discovers every table via the OpenAPI schema, then probes each one
               with the anon key. Flags tables that return data without
               authentication or allow anonymous inserts.
             </p>
           </div>
-          <div className="border border-gray-800 rounded-2xl p-8">
-            <div className="w-10 h-10 bg-amber-950/60 border border-amber-800/40 rounded-lg flex items-center justify-center mb-5 text-amber-400 font-bold text-sm">
+          <div className="border border-sand-200 rounded-xl p-7 bg-white">
+            <div className="w-9 h-9 bg-amber-50 rounded-lg flex items-center justify-center mb-5 text-amber-600 font-semibold text-xs">
               STR
             </div>
-            <h3 className="text-lg font-semibold mb-2">Storage Buckets</h3>
-            <p className="text-gray-400 text-sm leading-relaxed">
+            <h3 className="text-base font-semibold mb-2 text-sand-900">
+              Storage Buckets
+            </h3>
+            <p className="text-sand-500 text-sm leading-relaxed">
               Lists every bucket and checks for public access, open directory
               listing, and anonymous upload permissions that could expose files
               or let attackers store arbitrary content.
             </p>
           </div>
-          <div className="border border-gray-800 rounded-2xl p-8">
-            <div className="w-10 h-10 bg-blue-950/60 border border-blue-800/40 rounded-lg flex items-center justify-center mb-5 text-blue-400 font-bold text-sm">
+          <div className="border border-sand-200 rounded-xl p-7 bg-white">
+            <div className="w-9 h-9 bg-blue-50 rounded-lg flex items-center justify-center mb-5 text-blue-600 font-semibold text-xs">
               AUTH
             </div>
-            <h3 className="text-lg font-semibold mb-2">Auth Configuration</h3>
-            <p className="text-gray-400 text-sm leading-relaxed">
+            <h3 className="text-base font-semibold mb-2 text-sand-900">
+              Auth Configuration
+            </h3>
+            <p className="text-sand-500 text-sm leading-relaxed">
               Checks whether email confirmation is enforced, whether auth
               settings are exposed to unauthenticated users, and flags common
               misconfigurations that weaken account security.
@@ -111,45 +117,53 @@ export default async function Home() {
         </div>
       </section>
 
-      {/* How It Works */}
-      <section id="how-it-works" className="px-8 py-20 max-w-4xl mx-auto">
-        <h2 className="text-3xl font-bold text-center mb-14">
+      <section
+        id="how-it-works"
+        className="px-8 py-20 max-w-3xl mx-auto border-t border-sand-200"
+      >
+        <h2 className="text-2xl font-semibold text-center mb-14 text-sand-900">
           How it works
         </h2>
-        <div className="space-y-12">
-          <div className="flex items-start gap-6">
-            <div className="shrink-0 w-10 h-10 rounded-full bg-gray-800 flex items-center justify-center text-sm font-bold text-gray-300">
+        <div className="space-y-10">
+          <div className="flex items-start gap-5">
+            <div className="shrink-0 w-8 h-8 rounded-full border border-sand-200 flex items-center justify-center text-sm font-medium text-sand-500">
               1
             </div>
             <div>
-              <h3 className="text-lg font-semibold mb-1">Enter your project URL and anon key</h3>
-              <p className="text-gray-400 text-sm leading-relaxed">
+              <h3 className="text-base font-semibold mb-1 text-sand-900">
+                Enter your project URL and anon key
+              </h3>
+              <p className="text-sand-500 text-sm leading-relaxed">
                 Both values are in your Supabase dashboard under Settings &gt;
                 API. The anon key is safe to share -- it is the public key your
                 frontend already uses.
               </p>
             </div>
           </div>
-          <div className="flex items-start gap-6">
-            <div className="shrink-0 w-10 h-10 rounded-full bg-gray-800 flex items-center justify-center text-sm font-bold text-gray-300">
+          <div className="flex items-start gap-5">
+            <div className="shrink-0 w-8 h-8 rounded-full border border-sand-200 flex items-center justify-center text-sm font-medium text-sand-500">
               2
             </div>
             <div>
-              <h3 className="text-lg font-semibold mb-1">We scan, read-only</h3>
-              <p className="text-gray-400 text-sm leading-relaxed">
+              <h3 className="text-base font-semibold mb-1 text-sand-900">
+                We scan, read-only
+              </h3>
+              <p className="text-sand-500 text-sm leading-relaxed">
                 The scanner runs all three audit modules in parallel. It only
                 performs GET requests and anonymous access checks. Nothing is
                 written, deleted, or modified in your project.
               </p>
             </div>
           </div>
-          <div className="flex items-start gap-6">
-            <div className="shrink-0 w-10 h-10 rounded-full bg-gray-800 flex items-center justify-center text-sm font-bold text-gray-300">
+          <div className="flex items-start gap-5">
+            <div className="shrink-0 w-8 h-8 rounded-full border border-sand-200 flex items-center justify-center text-sm font-medium text-sand-500">
               3
             </div>
             <div>
-              <h3 className="text-lg font-semibold mb-1">Get your report with copy-paste fixes</h3>
-              <p className="text-gray-400 text-sm leading-relaxed">
+              <h3 className="text-base font-semibold mb-1 text-sand-900">
+                Get your report with copy-paste fixes
+              </h3>
+              <p className="text-sand-500 text-sm leading-relaxed">
                 You receive an A-F security grade, a breakdown of every finding
                 by severity, and AI-generated SQL and config snippets you can
                 apply immediately in the Supabase SQL editor.
@@ -159,30 +173,33 @@ export default async function Home() {
         </div>
       </section>
 
-      {/* Pricing teaser */}
-      <section className="px-8 py-20 max-w-4xl mx-auto text-center">
-        <h2 className="text-3xl font-bold mb-4">Simple pricing</h2>
-        <p className="text-gray-400 mb-10 max-w-lg mx-auto">
+      <section className="px-8 py-20 max-w-3xl mx-auto text-center border-t border-sand-200">
+        <h2 className="text-2xl font-semibold mb-3 text-sand-900">
+          Simple pricing
+        </h2>
+        <p className="text-sand-500 mb-10 max-w-md mx-auto text-sm">
           Start scanning for free. Upgrade when you need unlimited access.
         </p>
-        <div className="grid sm:grid-cols-2 gap-6 max-w-2xl mx-auto">
-          <div className="border border-gray-800 rounded-2xl p-8 text-left">
-            <h3 className="font-semibold mb-1">Free</h3>
-            <div className="text-3xl font-bold mb-4">
-              $0<span className="text-base font-normal text-gray-400">/mo</span>
+        <div className="grid sm:grid-cols-2 gap-5 max-w-xl mx-auto">
+          <div className="border border-sand-200 rounded-xl p-7 text-left bg-white">
+            <h3 className="font-semibold mb-1 text-sand-900">Free</h3>
+            <div className="text-3xl font-semibold mb-4 text-sand-900">
+              $0
+              <span className="text-base font-normal text-sand-400">/mo</span>
             </div>
-            <ul className="text-sm text-gray-400 space-y-2">
+            <ul className="text-sm text-sand-500 space-y-2">
               <li>3 scans per month</li>
               <li>All audit modules</li>
               <li>AI fix suggestions</li>
             </ul>
           </div>
-          <div className="border border-emerald-700/60 rounded-2xl p-8 text-left bg-emerald-950/20">
-            <h3 className="font-semibold mb-1">Pro</h3>
-            <div className="text-3xl font-bold mb-4">
-              $29<span className="text-base font-normal text-gray-400">/mo</span>
+          <div className="border border-sand-900 rounded-xl p-7 text-left bg-white">
+            <h3 className="font-semibold mb-1 text-sand-900">Pro</h3>
+            <div className="text-3xl font-semibold mb-4 text-sand-900">
+              $29
+              <span className="text-base font-normal text-sand-400">/mo</span>
             </div>
-            <ul className="text-sm text-gray-400 space-y-2">
+            <ul className="text-sm text-sand-500 space-y-2">
               <li>Unlimited scans</li>
               <li>All audit modules</li>
               <li>AI fix suggestions</li>
@@ -192,15 +209,14 @@ export default async function Home() {
         </div>
         <a
           href="/login"
-          className="inline-block mt-10 px-8 py-3 bg-emerald-600 hover:bg-emerald-500 text-white font-semibold rounded-lg transition-colors"
+          className="inline-block mt-10 px-7 py-2.5 bg-sand-900 hover:bg-sand-700 text-white font-medium rounded-lg transition-colors text-sm"
         >
-          Get Started Free
+          Get started free
         </a>
       </section>
 
-      {/* Footer */}
-      <footer className="px-8 py-10 max-w-6xl mx-auto border-t border-gray-800 text-center text-sm text-gray-500">
-        Supabase Security Scanner. Your credentials are never persisted.
+      <footer className="px-8 py-8 max-w-5xl mx-auto border-t border-sand-200 text-center text-xs text-sand-400">
+        SupaScanner. Your credentials are never persisted.
       </footer>
     </main>
   );

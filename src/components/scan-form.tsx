@@ -43,7 +43,7 @@ export function ScanForm({ onScanComplete, onScanError }: ScanFormProps) {
       <div>
         <label
           htmlFor="supabaseUrl"
-          className="block text-sm font-medium text-gray-300 mb-1"
+          className="block text-sm font-medium text-sand-700 mb-1.5"
         >
           Supabase Project URL
         </label>
@@ -54,7 +54,7 @@ export function ScanForm({ onScanComplete, onScanError }: ScanFormProps) {
           placeholder="https://your-project.supabase.co"
           value={supabaseUrl}
           onChange={(e) => setSupabaseUrl(e.target.value)}
-          className="w-full px-3 py-2 bg-gray-900 border border-gray-700 rounded-lg text-gray-100 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-transparent"
+          className="w-full px-3 py-2 bg-white border border-sand-200 rounded-lg text-sand-900 placeholder-sand-400 focus:outline-none focus:ring-2 focus:ring-sand-900/10 focus:border-sand-300 transition-colors"
           disabled={scanning}
         />
       </div>
@@ -62,7 +62,7 @@ export function ScanForm({ onScanComplete, onScanError }: ScanFormProps) {
       <div>
         <label
           htmlFor="anonKey"
-          className="block text-sm font-medium text-gray-300 mb-1"
+          className="block text-sm font-medium text-sand-700 mb-1.5"
         >
           Anon (Public) Key
         </label>
@@ -73,10 +73,10 @@ export function ScanForm({ onScanComplete, onScanError }: ScanFormProps) {
           placeholder="eyJhbGciOiJIUzI1NiIs..."
           value={anonKey}
           onChange={(e) => setAnonKey(e.target.value)}
-          className="w-full px-3 py-2 bg-gray-900 border border-gray-700 rounded-lg text-gray-100 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-transparent"
+          className="w-full px-3 py-2 bg-white border border-sand-200 rounded-lg text-sand-900 placeholder-sand-400 focus:outline-none focus:ring-2 focus:ring-sand-900/10 focus:border-sand-300 transition-colors"
           disabled={scanning}
         />
-        <p className="text-xs text-gray-500 mt-1">
+        <p className="text-xs text-sand-400 mt-1.5">
           Your anon key is only used during the scan and is never stored.
         </p>
       </div>
@@ -84,9 +84,9 @@ export function ScanForm({ onScanComplete, onScanError }: ScanFormProps) {
       <button
         type="submit"
         disabled={scanning}
-        className="w-full py-2.5 px-4 bg-emerald-600 hover:bg-emerald-500 disabled:bg-gray-700 disabled:text-gray-400 text-white font-medium rounded-lg transition-colors"
+        className="w-full py-2.5 px-4 bg-sand-900 hover:bg-sand-700 disabled:bg-sand-200 disabled:text-sand-400 text-white font-medium rounded-lg transition-colors text-sm"
       >
-        {scanning ? "Scanning..." : "Run Security Scan"}
+        {scanning ? "Scanning..." : "Run security scan"}
       </button>
     </form>
   );
