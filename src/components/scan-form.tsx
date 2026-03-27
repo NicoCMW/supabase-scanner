@@ -10,10 +10,11 @@ import {
 interface ScanFormProps {
   readonly onScanComplete: (result: unknown) => void;
   readonly onScanError: (error: string) => void;
+  readonly initialUrl?: string;
 }
 
-export function ScanForm({ onScanComplete, onScanError }: ScanFormProps) {
-  const [supabaseUrl, setSupabaseUrl] = useState("");
+export function ScanForm({ onScanComplete, onScanError, initialUrl }: ScanFormProps) {
+  const [supabaseUrl, setSupabaseUrl] = useState(initialUrl ?? "");
   const [anonKey, setAnonKey] = useState("");
   const [scanning, setScanning] = useState(false);
 

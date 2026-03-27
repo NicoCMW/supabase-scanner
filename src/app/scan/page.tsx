@@ -1,7 +1,7 @@
 "use client";
 
-import { useState } from "react";
-import { useRouter } from "next/navigation";
+import { Suspense, useState } from "react";
+import { useRouter, useSearchParams } from "next/navigation";
 import { ScanForm } from "@/components/scan-form";
 import { ScanResults } from "@/components/scan-results";
 import type { Grade, ScanModuleResult } from "@/types/scanner";
@@ -16,8 +16,10 @@ interface ScanResponse {
   readonly completedAt: string;
 }
 
-export default function ScanPage() {
+function ScanPageInner() {
   const router = useRouter();
+  const searchParams = useSearchParams();
+  const initialUrl = searchParams.get("url") ?? undefined;
   const [result, setResult] = useState<ScanResponse | null>(null);
   const [error, setError] = useState<string | null>(null);
 
@@ -71,9 +73,18 @@ export default function ScanPage() {
           <ScanForm
             onScanComplete={handleScanComplete}
             onScanError={handleScanError}
+            initialUrl={initialUrl}
           />
         </div>
       )}
     </main>
+  );
+}
+
+export default function ScanPage() {
+  return (
+    <Suspense>
+      <ScanPageInner />
+    </Suspense>
   );
 }

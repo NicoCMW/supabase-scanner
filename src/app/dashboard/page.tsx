@@ -4,6 +4,9 @@ import { createSupabaseServer } from "@/lib/supabase/server";
 import { ScanHistory } from "@/components/scan-history";
 import { UsageBanner } from "@/components/usage-banner";
 import { AnalyticsEvents } from "@/components/analytics-events";
+import { TrendChart } from "@/components/trend-chart";
+import { ExportButton } from "@/components/export-button";
+import { DashboardStats } from "@/components/dashboard-stats";
 import type { Grade } from "@/types/scanner";
 
 interface ScanJobRow {
@@ -35,14 +38,21 @@ export default async function DashboardPage() {
     .order("created_at", { ascending: false })
     .limit(50);
 
+  const jobs = (scanJobs ?? []) as readonly ScanJobRow[];
+
+  const completedScans = jobs.filter(
+    (j) => j.status === "completed" && j.grade != null,
+  );
+
   return (
-    <main className="min-h-screen p-8 max-w-3xl mx-auto">
-      <header className="flex items-center justify-between mb-8">
+    <main className="min-h-screen p-4 sm:p-8 max-w-3xl mx-auto">
+      <header className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-8">
         <div>
           <h1 className="text-xl font-semibold text-sand-900">Dashboard</h1>
           <p className="text-sand-400 text-sm">{user.email}</p>
         </div>
-        <div className="flex items-center gap-4">
+        <div className="flex items-center gap-3">
+          <ExportButton />
           <a
             href="/scan"
             className="px-4 py-2 bg-sand-900 hover:bg-sand-700 text-white text-sm font-medium rounded-lg transition-colors"
@@ -64,7 +74,25 @@ export default async function DashboardPage() {
         <AnalyticsEvents />
       </Suspense>
       <UsageBanner />
-      <ScanHistory scanJobs={(scanJobs ?? []) as readonly ScanJobRow[]} />
+
+      {completedScans.length > 0 && (
+        <div className="mb-6">
+          <DashboardStats scanJobs={completedScans as readonly (ScanJobRow & { grade: Grade })[]} />
+        </div>
+      )}
+
+      {completedScans.length >= 2 && (
+        <div className="mb-6">
+          <TrendChart
+            scans={completedScans.map((j) => ({
+              grade: j.grade!,
+              created_at: j.created_at,
+            }))}
+          />
+        </div>
+      )}
+
+      <ScanHistory scanJobs={jobs} />
     </main>
   );
 }
