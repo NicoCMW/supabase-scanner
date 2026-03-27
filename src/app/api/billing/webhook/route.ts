@@ -1,15 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import Stripe from "stripe";
-import { createClient } from "@supabase/supabase-js";
+import { createSupabaseAdmin } from "@/lib/supabase/admin";
 import { getStripe, getStripeWebhookSecret } from "@/lib/billing/stripe";
-
-// Use service role client for webhook (no user session)
-function createServiceClient() {
-  return createClient(
-    process.env.NEXT_PUBLIC_SUPABASE_URL!,
-    process.env.SUPABASE_SERVICE_ROLE_KEY!,
-  );
-}
 
 export async function POST(request: NextRequest) {
   const body = await request.text();
@@ -38,7 +30,7 @@ export async function POST(request: NextRequest) {
     );
   }
 
-  const supabase = createServiceClient();
+  const supabase = createSupabaseAdmin();
 
   switch (event.type) {
     case "customer.subscription.created":
@@ -58,7 +50,7 @@ export async function POST(request: NextRequest) {
 }
 
 async function handleSubscriptionChange(
-  supabase: ReturnType<typeof createServiceClient>,
+  supabase: ReturnType<typeof createSupabaseAdmin>,
   subscription: Stripe.Subscription,
 ) {
   const userId = subscription.metadata.supabase_user_id;
@@ -99,7 +91,7 @@ async function handleSubscriptionChange(
 }
 
 async function handleSubscriptionDeleted(
-  supabase: ReturnType<typeof createServiceClient>,
+  supabase: ReturnType<typeof createSupabaseAdmin>,
   subscription: Stripe.Subscription,
 ) {
   await supabase

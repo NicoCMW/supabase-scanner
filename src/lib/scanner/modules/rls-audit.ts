@@ -148,14 +148,11 @@ export const rlsAuditModule: ScanModule = {
 
     const tables = await discoverTables(target);
 
-    // Test each table for read and write access
-    const readResults = await Promise.all(
-      tables.map((t) => testTableAccess(target, t)),
-    );
-
-    const writeResults = await Promise.all(
-      tables.map((t) => testTableInsert(target, t)),
-    );
+    // Test each table for read and write access in parallel
+    const [readResults, writeResults] = await Promise.all([
+      Promise.all(tables.map((t) => testTableAccess(target, t))),
+      Promise.all(tables.map((t) => testTableInsert(target, t))),
+    ]);
 
     for (const finding of [...readResults, ...writeResults]) {
       if (finding) {

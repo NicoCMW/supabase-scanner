@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createSupabaseServer } from "@/lib/supabase/server";
+import { createSupabaseAdmin } from "@/lib/supabase/admin";
 import { getStripe } from "@/lib/billing/stripe";
 import { PLANS } from "@/lib/billing/plans";
 
@@ -45,7 +46,8 @@ export async function POST(request: NextRequest) {
     });
     stripeCustomerId = stripeCustomer.id;
 
-    await supabase.from("customers").insert({
+    const adminClient = createSupabaseAdmin();
+    await adminClient.from("customers").insert({
       id: user.id,
       stripe_customer_id: stripeCustomerId,
     });

@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { runScan, validateTarget } from "@/lib/scanner";
 import { createSupabaseServer } from "@/lib/supabase/server";
+import { createSupabaseAdmin } from "@/lib/supabase/admin";
 import { checkScanAllowed, incrementUsage } from "@/lib/billing/usage";
 import type { ScanTarget } from "@/types/scanner";
 
@@ -117,8 +118,9 @@ export async function POST(request: NextRequest) {
       })
       .eq("id", scanJob.id);
 
-    // Increment usage counter after successful scan
-    await incrementUsage(supabase, user.id);
+    // Increment usage counter after successful scan (service role bypasses RLS)
+    const adminClient = createSupabaseAdmin();
+    await incrementUsage(adminClient, user.id);
 
     return NextResponse.json({
       scanJobId: scanJob.id,
