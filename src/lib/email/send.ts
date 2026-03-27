@@ -3,10 +3,12 @@ import { resend, EMAIL_FROM } from "./client";
 import { WelcomeEmail } from "./templates/welcome";
 import { ScanResultsEmail } from "./templates/scan-results";
 import { WeeklyDigestEmail } from "./templates/weekly-digest";
+import { ScheduledScanResultsEmail } from "./templates/scheduled-scan-results";
 import type {
   WelcomeEmailProps,
   ScanResultsEmailProps,
   WeeklyDigestEmailProps,
+  ScheduledScanEmailProps,
 } from "./types";
 
 interface SendResult {
@@ -101,6 +103,43 @@ export async function sendWeeklyDigestEmail(
   } catch (err) {
     Sentry.captureException(err, {
       extra: { emailType: "weekly_digest", to },
+    });
+    return {
+      success: false,
+      error: err instanceof Error ? err.message : "Unknown error",
+    };
+  }
+}
+
+export async function sendScheduledScanEmail(
+  to: string,
+  props: ScheduledScanEmailProps,
+): Promise<SendResult> {
+  const gradeChange =
+    props.previousGrade && props.previousGrade !== props.grade
+      ? ` (was ${props.previousGrade})`
+      : "";
+
+  try {
+    const { data, error } = await resend.emails.send({
+      from: EMAIL_FROM,
+      to,
+      subject: `Scheduled Scan: Grade ${props.grade}${gradeChange} - ${props.totalFindings} Finding${props.totalFindings === 1 ? "" : "s"}`,
+      react: ScheduledScanResultsEmail(props),
+    });
+
+    if (error) {
+      Sentry.captureMessage("Failed to send scheduled scan email", {
+        level: "warning",
+        extra: { to, error },
+      });
+      return { success: false, error: error.message };
+    }
+
+    return { success: true, id: data?.id };
+  } catch (err) {
+    Sentry.captureException(err, {
+      extra: { emailType: "scheduled_scan", to },
     });
     return {
       success: false,

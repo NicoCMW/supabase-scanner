@@ -61,7 +61,7 @@ export async function updatePreferencesByToken(
   updates: Partial<
     Pick<
       EmailPreferences,
-      "welcome_email" | "scan_results_email" | "weekly_digest_email"
+      "welcome_email" | "scan_results_email" | "weekly_digest_email" | "scheduled_scan_email"
     >
   >,
 ): Promise<EmailPreferences | null> {
@@ -88,7 +88,7 @@ export async function updatePreferences(
   updates: Partial<
     Pick<
       EmailPreferences,
-      "welcome_email" | "scan_results_email" | "weekly_digest_email"
+      "welcome_email" | "scan_results_email" | "weekly_digest_email" | "scheduled_scan_email"
     >
   >,
 ): Promise<EmailPreferences | null> {

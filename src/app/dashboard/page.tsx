@@ -1,12 +1,15 @@
 import { Suspense } from "react";
 import { redirect } from "next/navigation";
 import { createSupabaseServer } from "@/lib/supabase/server";
+import { getUserPlan } from "@/lib/billing/usage";
+import { isProPlan } from "@/lib/billing/plans";
 import { ScanHistory } from "@/components/scan-history";
 import { UsageBanner } from "@/components/usage-banner";
 import { AnalyticsEvents } from "@/components/analytics-events";
 import { TrendChart } from "@/components/trend-chart";
 import { ExportButton } from "@/components/export-button";
 import { DashboardStats } from "@/components/dashboard-stats";
+import { ScheduleManager } from "@/components/schedule-manager";
 import type { Grade } from "@/types/scanner";
 
 interface ScanJobRow {
@@ -30,14 +33,18 @@ export default async function DashboardPage() {
     redirect("/login");
   }
 
-  const { data: scanJobs } = await supabase
-    .from("scan_jobs")
-    .select(
-      "id, supabase_url, status, grade, total_findings, duration_ms, created_at",
-    )
-    .order("created_at", { ascending: false })
-    .limit(50);
+  const [{ data: scanJobs }, planId] = await Promise.all([
+    supabase
+      .from("scan_jobs")
+      .select(
+        "id, supabase_url, status, grade, total_findings, duration_ms, created_at",
+      )
+      .order("created_at", { ascending: false })
+      .limit(50),
+    getUserPlan(supabase, user.id),
+  ]);
 
+  const isPro = isProPlan(planId);
   const jobs = (scanJobs ?? []) as readonly ScanJobRow[];
 
   const completedScans = jobs.filter(
@@ -89,6 +96,12 @@ export default async function DashboardPage() {
               created_at: j.created_at,
             }))}
           />
+        </div>
+      )}
+
+      {isPro && (
+        <div className="mb-6">
+          <ScheduleManager />
         </div>
       )}
 
