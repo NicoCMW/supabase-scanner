@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { createSupabaseServer } from "@/lib/supabase/server";
 import { siteConfig } from "@/lib/seo/config";
 import { redirect } from "next/navigation";
+import { WaitlistForm } from "@/components/waitlist-form";
 
 export const metadata: Metadata = {
   title: "SupaScanner - Find RLS Gaps Before Your Users Do",
@@ -80,6 +81,12 @@ export default async function Home() {
         <p className="mt-5 text-xs text-sand-400">
           3 free scans per month. No credit card required.
         </p>
+        <div className="mt-10 pt-8 border-t border-sand-200">
+          <p className="text-sm text-sand-500 mb-3">
+            Not ready to scan yet? Get notified when we launch new features.
+          </p>
+          <WaitlistForm />
+        </div>
       </section>
 
       <section className="px-8 py-20 max-w-5xl mx-auto">
