@@ -2,6 +2,10 @@
 
 import { useState } from "react";
 import { trackScanStarted, trackScanCompleted } from "@/lib/analytics/gtag";
+import {
+  trackScanInitiated,
+  trackScanCompleted as trackScanCompletedDL,
+} from "@/lib/analytics/datalayer";
 
 interface ScanFormProps {
   readonly onScanComplete: (result: unknown) => void;
@@ -17,6 +21,7 @@ export function ScanForm({ onScanComplete, onScanError }: ScanFormProps) {
     e.preventDefault();
     setScanning(true);
     trackScanStarted();
+    trackScanInitiated("free", "dashboard");
 
     try {
       const response = await fetch("/api/scan", {
@@ -32,8 +37,9 @@ export function ScanForm({ onScanComplete, onScanError }: ScanFormProps) {
         return;
       }
 
-      const result = data as { grade: string; totalFindings: number; durationMs: number };
+      const result = data as { grade: string; totalFindings: number; durationMs: number; criticalIssues?: number };
       trackScanCompleted(result.grade, result.totalFindings, result.durationMs);
+      trackScanCompletedDL("free", result.grade, result.totalFindings, result.criticalIssues ?? 0);
       onScanComplete(data);
     } catch {
       onScanError("Network error. Please try again.");

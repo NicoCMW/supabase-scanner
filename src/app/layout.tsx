@@ -2,6 +2,11 @@ import type { Metadata } from "next";
 import { Analytics } from "@vercel/analytics/next";
 import { SpeedInsights } from "@vercel/speed-insights/next";
 import { GoogleAnalytics } from "@/components/google-analytics";
+import {
+  GoogleTagManager,
+  GoogleTagManagerNoScript,
+} from "@/components/google-tag-manager";
+import { GclidCapture } from "@/components/gclid-capture";
 import { siteConfig } from "@/lib/seo/config";
 import { softwareApplicationJsonLd } from "@/lib/seo/json-ld";
 import "./globals.css";
@@ -45,7 +50,10 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className="antialiased bg-sand-50 text-sand-900 min-h-screen font-sans">
+        <GoogleTagManagerNoScript />
+        <GoogleTagManager />
         <GoogleAnalytics />
+        <GclidCapture />
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{
