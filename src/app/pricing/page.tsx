@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { PLANS } from "@/lib/billing/plans";
+import { SiteHeader } from "@/components/site-header";
 
 export default function PricingPage() {
   const [loading, setLoading] = useState(false);
@@ -20,16 +21,9 @@ export default function PricingPage() {
   }
 
   return (
-    <main className="min-h-screen p-8">
-      <div className="max-w-3xl mx-auto">
-        <nav className="mb-16">
-          <a
-            href="/"
-            className="text-base font-semibold tracking-tight text-sand-900"
-          >
-            SupaScanner
-          </a>
-        </nav>
+    <main className="min-h-screen" id="main-content">
+      <SiteHeader links={[{ href: "/blog", label: "Blog" }]} />
+      <div className="max-w-3xl mx-auto px-8">
 
         <h1 className="text-3xl font-semibold text-center mb-2 text-sand-900">
           Pricing

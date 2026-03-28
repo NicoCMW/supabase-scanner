@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { getAllPosts } from "@/lib/seo/blog";
 import { siteConfig } from "@/lib/seo/config";
 import { Breadcrumbs } from "@/components/breadcrumbs";
+import { SiteHeader } from "@/components/site-header";
 
 export const metadata: Metadata = {
   title: "Blog",
@@ -23,30 +24,9 @@ export default function BlogIndex() {
   const posts = getAllPosts();
 
   return (
-    <main className="min-h-screen p-8">
-      <div className="max-w-3xl mx-auto">
-        <nav className="mb-12 flex items-center justify-between">
-          <a
-            href="/"
-            className="text-base font-semibold tracking-tight text-sand-900"
-          >
-            SupaScanner
-          </a>
-          <div className="flex items-center gap-6">
-            <a
-              href="/pricing"
-              className="text-sm text-sand-500 hover:text-sand-900 transition-colors"
-            >
-              Pricing
-            </a>
-            <a
-              href="/login"
-              className="text-sm px-4 py-2 bg-sand-900 hover:bg-sand-700 text-white font-medium rounded-lg transition-colors"
-            >
-              Sign in
-            </a>
-          </div>
-        </nav>
+    <main className="min-h-screen" id="main-content">
+      <SiteHeader links={[{ href: "/pricing", label: "Pricing" }]} />
+      <div className="max-w-3xl mx-auto px-8">
 
         <Breadcrumbs
           items={[
@@ -88,7 +68,7 @@ export default function BlogIndex() {
                 href={`/blog/${post.slug}`}
                 className="inline-block mt-3 text-sm font-medium text-sand-900 hover:text-sand-600 transition-colors"
               >
-                Read more
+                Read more about {post.title}
               </a>
             </article>
           ))}

@@ -3,6 +3,7 @@ import { createSupabaseServer } from "@/lib/supabase/server";
 import { siteConfig } from "@/lib/seo/config";
 import { redirect } from "next/navigation";
 import { WaitlistForm } from "@/components/waitlist-form";
+import { SiteHeader } from "@/components/site-header";
 
 export const metadata: Metadata = {
   title: "SupaScanner - Find RLS Gaps Before Your Users Do",
@@ -23,38 +24,8 @@ export default async function Home() {
   }
 
   return (
-    <main className="min-h-screen">
-      <nav className="flex items-center justify-between px-8 py-5 max-w-5xl mx-auto">
-        <span className="text-base font-semibold tracking-tight text-sand-900">
-          SupaScanner
-        </span>
-        <div className="flex items-center gap-6">
-          <a
-            href="/security-checklist"
-            className="text-sm text-sand-500 hover:text-sand-900 transition-colors"
-          >
-            Checklist
-          </a>
-          <a
-            href="/blog"
-            className="text-sm text-sand-500 hover:text-sand-900 transition-colors"
-          >
-            Blog
-          </a>
-          <a
-            href="/pricing"
-            className="text-sm text-sand-500 hover:text-sand-900 transition-colors"
-          >
-            Pricing
-          </a>
-          <a
-            href="/login"
-            className="text-sm px-4 py-2 bg-sand-900 hover:bg-sand-700 text-white font-medium rounded-lg transition-colors"
-          >
-            Sign in
-          </a>
-        </div>
-      </nav>
+    <main className="min-h-screen" id="main-content">
+      <SiteHeader />
 
       <section className="px-8 pt-28 pb-24 max-w-3xl mx-auto text-center">
         <p className="text-sm text-sand-400 tracking-wide uppercase mb-6">
