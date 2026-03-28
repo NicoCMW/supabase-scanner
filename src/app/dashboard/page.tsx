@@ -66,7 +66,7 @@ export default async function DashboardPage() {
             Get Widget
           </a>
           <ExportButton />
-          <
+          <a
             href="/scan"
             className="px-4 py-2 bg-sand-900 hover:bg-sand-700 text-white text-sm font-medium rounded-lg transition-colors"
           >
