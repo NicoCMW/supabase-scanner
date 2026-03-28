@@ -1,22 +1,27 @@
 {
   "name": "supascanner",
-  "version": "0.1.0",
-  "description": "CLI tool for Supabase security scanning",
+  "version": "1.0.0",
+  "description": "CLI tool for scanning Supabase projects for security vulnerabilities. Checks RLS policies, storage buckets, and auth configuration.",
   "type": "module",
   "bin": {
     "supascanner": "./dist/index.js"
   },
+  "files": [
+    "dist"
+  ],
   "scripts": {
     "build": "tsc",
     "dev": "tsc --watch",
     "test": "vitest run",
-    "test:watch": "vitest"
+    "test:watch": "vitest",
+    "prepublishOnly": "npm run build"
   },
   "dependencies": {
-    "@supascanner/core": "*",
+    "@supascanner/core": "^1.0.0",
     "commander": "^13.0.0"
   },
   "devDependencies": {
+    "@types/node": "^25.5.0",
     "typescript": "^6.0.2",
     "vitest": "^4.1.2"
   },
@@ -25,7 +30,20 @@
     "security",
     "scanner",
     "rls",
-    "cli"
+    "cli",
+    "audit",
+    "row-level-security",
+    "storage",
+    "auth"
   ],
-  "license": "MIT"
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/NicoCMW/supabase-scanner.git",
+    "directory": "packages/cli"
+  },
+  "homepage": "https://supabase-scanner.vercel.app",
+  "license": "MIT",
+  "engines": {
+    "node": ">=18"
+  }
 }

@@ -17,7 +17,7 @@ const program = new Command();
 program
   .name("supascanner")
   .description("Scan your Supabase project for security vulnerabilities")
-  .version("0.1.0");
+  .version("1.0.0");
 
 program
   .command("scan")

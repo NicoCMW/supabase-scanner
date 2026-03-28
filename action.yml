@@ -1,5 +1,10 @@
 name: "SupaScanner Security Scan"
 description: "Run Supabase security scans on PR/push and post results as PR comments"
+author: "NicoCMW"
+
+branding:
+  icon: "shield"
+  color: "green"
 
 inputs:
   supabase-url:

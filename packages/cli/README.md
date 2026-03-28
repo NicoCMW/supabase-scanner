@@ -1,6 +1,11 @@
 # supascanner CLI
 
+[![npm version](https://img.shields.io/npm/v/supascanner.svg)](https://www.npmjs.com/package/supascanner)
+[![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](https://opensource.org/licenses/MIT)
+
 Command-line tool for scanning Supabase projects for security vulnerabilities. Checks Row-Level Security (RLS), storage bucket policies, and authentication configuration.
+
+> Looking for CI/CD integration? Check out the [SupaScanner GitHub Action](https://github.com/NicoCMW/supabase-scanner) for automated security scanning on pull requests.
 
 ## Installation
 

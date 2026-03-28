@@ -1,6 +1,10 @@
 # SupaScanner GitHub Action
 
+[![GitHub Marketplace](https://img.shields.io/badge/Marketplace-SupaScanner-green?logo=github)](https://github.com/marketplace/actions/supascanner-security-scan)
+
 A GitHub Action that runs Supabase security scans on pull requests and pushes, posting results as PR comments.
+
+> For local scanning and other CI/CD systems, use the [supascanner CLI](https://www.npmjs.com/package/supascanner): `npx supascanner scan`
 
 ## Usage
 
@@ -28,7 +32,7 @@ jobs:
 
       - name: Run SupaScanner
         id: scan
-        uses: NicoCMW/supabase-scanner@main
+        uses: NicoCMW/supabase-scanner@v1
         with:
           supabase-url: ${{ secrets.SUPABASE_URL }}
           supabase-anon-key: ${{ secrets.SUPABASE_ANON_KEY }}
@@ -99,7 +103,7 @@ Use the outputs to conditionally run other steps:
 ```yaml
 - name: Run SupaScanner
   id: scan
-  uses: NicoCMW/supabase-scanner@main
+  uses: NicoCMW/supabase-scanner@v1
   with:
     supabase-url: ${{ secrets.SUPABASE_URL }}
     supabase-anon-key: ${{ secrets.SUPABASE_ANON_KEY }}
