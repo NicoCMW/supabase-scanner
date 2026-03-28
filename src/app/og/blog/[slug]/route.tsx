@@ -83,7 +83,7 @@ export async function GET(
             SS
           </div>
           <div style={{ fontSize: "18px", color: "#57534e" }}>
-            supascanner.com
+            supabase-scanner.vercel.app
           </div>
         </div>
       </div>

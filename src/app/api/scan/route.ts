@@ -126,7 +126,7 @@ export async function POST(request: NextRequest) {
     await incrementUsage(adminClient, user.id);
 
     // Send scan results email (fire-and-forget, don't block response)
-    const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? "https://supascanner.com";
+    const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? "https://supabase-scanner.vercel.app";
     getOrCreatePreferences(adminClient, user.id)
       .then((prefs) => {
         if (!prefs.scan_results_email) return;

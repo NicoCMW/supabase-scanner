@@ -165,7 +165,7 @@ export default async function Image({
             color: "#a8a29e",
           }}
         >
-          supascanner.com
+          supabase-scanner.vercel.app
         </div>
       </div>
     ),

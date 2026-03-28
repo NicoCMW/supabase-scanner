@@ -30,7 +30,7 @@ export async function POST(request: NextRequest) {
 
   const adminClient = createSupabaseAdmin();
   const siteUrl =
-    process.env.NEXT_PUBLIC_SITE_URL ?? "https://supascanner.com";
+    process.env.NEXT_PUBLIC_SITE_URL ?? "https://supabase-scanner.vercel.app";
 
   // Fetch all enabled schedules that are due
   const { data: dueSchedules, error: fetchError } = await adminClient

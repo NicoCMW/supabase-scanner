@@ -20,7 +20,7 @@ export async function POST(request: NextRequest) {
 
   const adminClient = createSupabaseAdmin();
   const siteUrl =
-    process.env.NEXT_PUBLIC_SITE_URL ?? "https://supascanner.com";
+    process.env.NEXT_PUBLIC_SITE_URL ?? "https://supabase-scanner.vercel.app";
 
   // Get all users with weekly digest enabled
   const { data: preferences, error: prefsError } = await adminClient

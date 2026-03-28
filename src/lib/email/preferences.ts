@@ -2,7 +2,7 @@ import type { SupabaseClient } from "@supabase/supabase-js";
 import type { EmailPreferences } from "./types";
 
 const SITE_URL =
-  process.env.NEXT_PUBLIC_SITE_URL ?? "https://supascanner.com";
+  process.env.NEXT_PUBLIC_SITE_URL ?? "https://supabase-scanner.vercel.app";
 
 /**
  * Get or create email preferences for a user.

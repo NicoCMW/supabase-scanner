@@ -35,8 +35,8 @@ describe("sendScanResultsEmail", () => {
     highCount: 1,
     mediumCount: 2,
     lowCount: 2,
-    scanUrl: "https://supascanner.com/scan/abc-123",
-    unsubscribeUrl: "https://supascanner.com/api/email/unsubscribe?token=tok",
+    scanUrl: "https://supabase-scanner.vercel.app/scan/abc-123",
+    unsubscribeUrl: "https://supabase-scanner.vercel.app/api/email/unsubscribe?token=tok",
   };
 
   it("sends email via resend and returns success", async () => {
@@ -95,7 +95,7 @@ describe("sendWelcomeEmail", () => {
 
     const result = await sendWelcomeEmail("new@user.com", {
       userName: "newuser",
-      unsubscribeUrl: "https://supascanner.com/api/email/unsubscribe?token=t",
+      unsubscribeUrl: "https://supabase-scanner.vercel.app/api/email/unsubscribe?token=t",
     });
 
     expect(result).toEqual({ success: true, id: "w-1" });
@@ -116,8 +116,8 @@ describe("sendWeeklyDigestEmail", () => {
       topFindings: [
         { title: "No RLS on users", severity: "critical", category: "rls" },
       ],
-      dashboardUrl: "https://supascanner.com/dashboard",
-      unsubscribeUrl: "https://supascanner.com/api/email/unsubscribe?token=t2",
+      dashboardUrl: "https://supabase-scanner.vercel.app/dashboard",
+      unsubscribeUrl: "https://supabase-scanner.vercel.app/api/email/unsubscribe?token=t2",
     });
 
     expect(result).toEqual({ success: true, id: "d-1" });

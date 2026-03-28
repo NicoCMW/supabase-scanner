@@ -43,7 +43,7 @@ export function EmailLayout({
               </Link>{" "}
               |{" "}
               <Link
-                href="https://supascanner.com/dashboard"
+                href="https://supabase-scanner.vercel.app/dashboard"
                 style={unsubscribeLinkStyle}
               >
                 Dashboard

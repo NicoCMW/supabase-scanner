@@ -3,7 +3,7 @@ export const siteConfig = {
   title: "SupaScanner - Supabase Security Scanner",
   description:
     "Scan your Supabase project for RLS gaps, exposed storage buckets, and auth misconfigurations. Get an A-F security grade with copy-paste SQL fixes in under 40 seconds.",
-  url: process.env.NEXT_PUBLIC_SITE_URL ?? "https://supascanner.com",
+  url: process.env.NEXT_PUBLIC_SITE_URL ?? "https://supabase-scanner.vercel.app",
   ogImage: "/og/default.png",
   locale: "en_US",
   categories: [

@@ -106,7 +106,7 @@ function unsubscribeHtml(message: string, success: boolean): string {
     <div class="icon">${success ? "&#10003;" : "&#10007;"}</div>
     <h1>${escapeHtml(message)}</h1>
     <p>${success ? "You will no longer receive these emails from SupaScanner." : "Please check the link and try again."}</p>
-    <a href="https://supascanner.com/dashboard">Go to Dashboard</a>
+    <a href="https://supabase-scanner.vercel.app/dashboard">Go to Dashboard</a>
   </div>
 </body>
 </html>`;

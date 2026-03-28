@@ -37,7 +37,7 @@ export default function PrivacyPage() {
             </h2>
             <p>
               SupaScanner (&quot;we&quot;, &quot;us&quot;, &quot;our&quot;)
-              operates the website at supascanner.com. This Privacy Policy
+              operates the website at supabase-scanner.vercel.app. This Privacy Policy
               explains how we collect, use, disclose, and safeguard your
               information when you visit our website and use our security
               scanning service.

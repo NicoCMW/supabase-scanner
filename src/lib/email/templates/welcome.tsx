@@ -27,7 +27,7 @@ export function WelcomeEmail({ userName, unsubscribeUrl }: WelcomeEmailProps) {
         </Heading>
         <Text style={textStyle}>
           1. Go to your{" "}
-          <Link href="https://supascanner.com/dashboard" style={linkStyle}>
+          <Link href="https://supabase-scanner.vercel.app/dashboard" style={linkStyle}>
             Dashboard
           </Link>
         </Text>
@@ -41,13 +41,13 @@ export function WelcomeEmail({ userName, unsubscribeUrl }: WelcomeEmailProps) {
           4. Fix issues using the provided SQL remediation snippets
         </Text>
         <Section style={buttonContainerStyle}>
-          <Button style={buttonStyle} href="https://supascanner.com/dashboard">
+          <Button style={buttonStyle} href="https://supabase-scanner.vercel.app/dashboard">
             Run Your First Scan
           </Button>
         </Section>
         <Text style={tipStyle}>
           Tip: Your free plan includes 3 scans per month. Need more?{" "}
-          <Link href="https://supascanner.com/pricing" style={linkStyle}>
+          <Link href="https://supabase-scanner.vercel.app/pricing" style={linkStyle}>
             Check out Pro
           </Link>
           .
