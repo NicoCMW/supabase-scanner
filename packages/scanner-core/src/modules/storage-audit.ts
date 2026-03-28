@@ -1,6 +1,6 @@
-import type { Finding, ScanModule, ScanModuleResult, ScanTarget } from "../types.js";
-import { supabaseGet } from "../supabase-client.js";
-import { createFinding } from "../utils.js";
+import type { Finding, ScanModule, ScanModuleResult, ScanTarget } from "../types";
+import { supabaseGet } from "../supabase-client";
+import { createFinding } from "../utils";
 
 interface BucketInfo {
   readonly id: string;

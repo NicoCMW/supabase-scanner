@@ -1,6 +1,6 @@
-import type { Finding, ScanModule, ScanModuleResult, ScanTarget } from "../types.js";
-import { supabasePost } from "../supabase-client.js";
-import { createFinding } from "../utils.js";
+import type { Finding, ScanModule, ScanModuleResult, ScanTarget } from "../types";
+import { supabasePost } from "../supabase-client";
+import { createFinding } from "../utils";
 
 async function checkEmailConfirmation(
   target: ScanTarget,

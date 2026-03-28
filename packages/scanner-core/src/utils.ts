@@ -1,4 +1,4 @@
-import type { Finding, Grade, Severity } from "./types.js";
+import type { Finding, Grade, Severity } from "./types";
 import { randomUUID } from "crypto";
 
 const SEVERITY_SCORES: Record<Severity, number> = {

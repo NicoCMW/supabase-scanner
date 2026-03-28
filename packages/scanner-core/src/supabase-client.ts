@@ -1,4 +1,4 @@
-import type { ScanTarget } from "./types.js";
+import type { ScanTarget } from "./types";
 
 export interface SupabaseHttpResponse {
   readonly status: number;

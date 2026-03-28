@@ -1,9 +1,9 @@
-import type { ScanModule, ScanResult, ScanTarget } from "./types.js";
-import { rlsAuditModule } from "./modules/rls-audit.js";
-import { storageAuditModule } from "./modules/storage-audit.js";
-import { authAuditModule } from "./modules/auth-audit.js";
-import { computeGrade } from "./utils.js";
-import { validateTarget } from "./supabase-client.js";
+import type { ScanModule, ScanResult, ScanTarget } from "./types";
+import { rlsAuditModule } from "./modules/rls-audit";
+import { storageAuditModule } from "./modules/storage-audit";
+import { authAuditModule } from "./modules/auth-audit";
+import { computeGrade } from "./utils";
+import { validateTarget } from "./supabase-client";
 
 const DEFAULT_MODULES: readonly ScanModule[] = [
   rlsAuditModule,
@@ -42,11 +42,11 @@ export async function runScan(
   };
 }
 
-export { validateTarget } from "./supabase-client.js";
-export { computeGrade, createFinding } from "./utils.js";
-export { rlsAuditModule } from "./modules/rls-audit.js";
-export { storageAuditModule } from "./modules/storage-audit.js";
-export { authAuditModule } from "./modules/auth-audit.js";
+export { validateTarget } from "./supabase-client";
+export { computeGrade, createFinding } from "./utils";
+export { rlsAuditModule } from "./modules/rls-audit";
+export { storageAuditModule } from "./modules/storage-audit";
+export { authAuditModule } from "./modules/auth-audit";
 export type {
   Finding,
   FindingCategory,
@@ -56,5 +56,5 @@ export type {
   ScanResult,
   ScanTarget,
   Severity,
-} from "./types.js";
-export type { SupabaseHttpResponse } from "./supabase-client.js";
+} from "./types";
+export type { SupabaseHttpResponse } from "./supabase-client";
