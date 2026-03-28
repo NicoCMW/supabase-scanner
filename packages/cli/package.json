@@ -1,0 +1,31 @@
+{
+  "name": "supascanner",
+  "version": "0.1.0",
+  "description": "CLI tool for Supabase security scanning",
+  "type": "module",
+  "bin": {
+    "supascanner": "./dist/index.js"
+  },
+  "scripts": {
+    "build": "tsc",
+    "dev": "tsc --watch",
+    "test": "vitest run",
+    "test:watch": "vitest"
+  },
+  "dependencies": {
+    "@supascanner/core": "*",
+    "commander": "^13.0.0"
+  },
+  "devDependencies": {
+    "typescript": "^6.0.2",
+    "vitest": "^4.1.2"
+  },
+  "keywords": [
+    "supabase",
+    "security",
+    "scanner",
+    "rls",
+    "cli"
+  ],
+  "license": "MIT"
+}

@@ -3,6 +3,7 @@ import { withSentryConfig } from "@sentry/nextjs";
 
 const nextConfig: NextConfig = {
   serverExternalPackages: ["@sentry/nextjs"],
+  transpilePackages: ["@supascanner/core"],
 };
 
 export default withSentryConfig(nextConfig, {
