@@ -1,0 +1,39 @@
+name: Supabase Security Scan
+
+on:
+  pull_request:
+    branches: [main]
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pull-requests: write
+
+jobs:
+  scan:
+    name: Security Scan
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Run SupaScanner
+        id: scan
+        uses: ./
+        with:
+          supabase-url: ${{ secrets.SUPABASE_URL }}
+          supabase-anon-key: ${{ secrets.SUPABASE_ANON_KEY }}
+          threshold: "high"
+          comment-on-pr: "true"
+
+      - name: Print summary
+        if: always()
+        run: |
+          echo "## Scan Results" >> $GITHUB_STEP_SUMMARY
+          echo "- Grade: ${{ steps.scan.outputs.grade }}" >> $GITHUB_STEP_SUMMARY
+          echo "- Total Findings: ${{ steps.scan.outputs.total-findings }}" >> $GITHUB_STEP_SUMMARY
+          echo "- Critical: ${{ steps.scan.outputs.critical-count }}" >> $GITHUB_STEP_SUMMARY
+          echo "- High: ${{ steps.scan.outputs.high-count }}" >> $GITHUB_STEP_SUMMARY
+          echo "- Threshold Exceeded: ${{ steps.scan.outputs.threshold-exceeded }}" >> $GITHUB_STEP_SUMMARY
