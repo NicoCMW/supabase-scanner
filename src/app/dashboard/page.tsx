@@ -10,6 +10,7 @@ import { TrendChart } from "@/components/trend-chart";
 import { ExportButton } from "@/components/export-button";
 import { DashboardStats } from "@/components/dashboard-stats";
 import { ScheduleManager } from "@/components/schedule-manager";
+import { ComparisonSummary } from "@/components/comparison-summary";
 import type { Grade } from "@/types/scanner";
 
 interface ScanJobRow {
@@ -50,6 +51,28 @@ export default async function DashboardPage() {
   const completedScans = jobs.filter(
     (j) => j.status === "completed" && j.grade != null,
   );
+
+  // Find the latest scan pair for the same URL to show comparison summary
+  const latestPair = (() => {
+    if (completedScans.length < 2) return null;
+    const latest = completedScans[0];
+    const previous = completedScans.find(
+      (j) =>
+        j.id !== latest.id && j.supabase_url === latest.supabase_url,
+    );
+    if (!previous || !latest.grade || !previous.grade) return null;
+    return {
+      fromId: previous.id,
+      fromGrade: previous.grade as Grade,
+      fromFindings: previous.total_findings,
+      fromDate: previous.created_at,
+      toId: latest.id,
+      toGrade: latest.grade as Grade,
+      toFindings: latest.total_findings,
+      toDate: latest.created_at,
+      url: latest.supabase_url,
+    };
+  })();
 
   return (
     <main className="min-h-screen p-4 sm:p-8 max-w-3xl mx-auto">
@@ -102,6 +125,12 @@ export default async function DashboardPage() {
               created_at: j.created_at,
             }))}
           />
+        </div>
+      )}
+
+      {latestPair && (
+        <div className="mb-6">
+          <ComparisonSummary pair={latestPair} />
         </div>
       )}
 
