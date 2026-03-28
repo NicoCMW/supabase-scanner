@@ -42,7 +42,7 @@ export async function runScan(
   };
 }
 
-export { validateTarget } from "./supabase-client";
+export { supabaseGet, supabasePost, validateTarget } from "./supabase-client";
 export { computeGrade, createFinding } from "./utils";
 export { rlsAuditModule } from "./modules/rls-audit";
 export { storageAuditModule } from "./modules/storage-audit";
