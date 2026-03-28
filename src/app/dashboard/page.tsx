@@ -59,8 +59,14 @@ export default async function DashboardPage() {
           <p className="text-sand-400 text-sm">{user.email}</p>
         </div>
         <div className="flex items-center gap-3">
-          <ExportButton />
           <a
+            href="/dashboard/widget"
+            className="text-sm text-sand-400 hover:text-sand-900 transition-colors"
+          >
+            Get Widget
+          </a>
+          <ExportButton />
+          <
             href="/scan"
             className="px-4 py-2 bg-sand-900 hover:bg-sand-700 text-white text-sm font-medium rounded-lg transition-colors"
           >
