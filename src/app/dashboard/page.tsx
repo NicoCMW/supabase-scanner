@@ -83,6 +83,12 @@ export default async function DashboardPage() {
         </div>
         <div className="flex items-center gap-3">
           <a
+            href="/dashboard/teams"
+            className="text-sm text-sand-400 hover:text-sand-900 transition-colors"
+          >
+            Teams
+          </a>
+          <a
             href="/dashboard/widget"
             className="text-sm text-sand-400 hover:text-sand-900 transition-colors"
           >

@@ -3,6 +3,7 @@ import { createSupabaseServer } from "@/lib/supabase/server";
 import { GradeBadge } from "@/components/grade-badge";
 import { FindingCard } from "@/components/finding-card";
 import { ShareButton } from "@/components/share-button";
+import { GetBadgeButton } from "@/components/get-badge-button";
 import type { Grade, Severity, FindingCategory, Finding } from "@/types/scanner";
 
 interface FindingRow {
@@ -90,7 +91,10 @@ export default async function ScanDetailPage({ params }: PageProps) {
         </div>
         <div className="flex items-center gap-4">
           {scanJob.status === "completed" && scanJob.grade && (
-            <ShareButton scanJobId={id} />
+            <>
+              <GetBadgeButton scanJobId={id} />
+              <ShareButton scanJobId={id} />
+            </>
           )}
           <a
             href="/dashboard"
