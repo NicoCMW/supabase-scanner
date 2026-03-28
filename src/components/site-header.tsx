@@ -12,6 +12,7 @@ interface SiteHeaderProps {
 }
 
 const defaultLinks: readonly NavLink[] = [
+  { href: "/docs", label: "Docs" },
   { href: "/security-checklist", label: "Checklist" },
   { href: "/blog", label: "Blog" },
   { href: "/pricing", label: "Pricing" },
