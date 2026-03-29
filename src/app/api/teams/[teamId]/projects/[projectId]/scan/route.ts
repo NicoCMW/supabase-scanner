@@ -4,6 +4,7 @@ import { createSupabaseServer } from "@/lib/supabase/server";
 import { createSupabaseAdmin } from "@/lib/supabase/admin";
 import { runScan, validateTarget } from "@/lib/scanner";
 import { checkScanAllowed, incrementUsage } from "@/lib/billing/usage";
+import { isStripeConfigured } from "@/lib/billing/config";
 import {
   requireTeamRole,
   isTeamMembership,
@@ -65,8 +66,11 @@ export async function POST(request: NextRequest, context: RouteContext) {
   );
 
   if (!allowed) {
+    const message = isStripeConfigured()
+      ? reason
+      : `Monthly scan limit reached (${usage.scansUsed}/${usage.scansLimit}). Pro is coming soon -- enter your email on the pricing page for early access.`;
     return NextResponse.json(
-      { error: reason, usage },
+      { error: message, usage },
       { status: 429 },
     );
   }

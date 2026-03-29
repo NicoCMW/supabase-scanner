@@ -3,9 +3,17 @@ import { createSupabaseServer } from "@/lib/supabase/server";
 import { createSupabaseAdmin } from "@/lib/supabase/admin";
 import { getStripe } from "@/lib/billing/stripe";
 import { PLANS } from "@/lib/billing/plans";
+import { isStripeConfigured } from "@/lib/billing/config";
 import { checkRateLimit, rateLimitResponse, RATE_LIMITS } from "@/lib/rate-limit";
 
 export async function POST(request: NextRequest) {
+  if (!isStripeConfigured()) {
+    return NextResponse.json(
+      { error: "Billing is not yet available. Check back soon." },
+      { status: 503 },
+    );
+  }
+
   const supabase = await createSupabaseServer();
 
   const {

@@ -2,8 +2,16 @@ import { NextRequest, NextResponse } from "next/server";
 import Stripe from "stripe";
 import { createSupabaseAdmin } from "@/lib/supabase/admin";
 import { getStripe, getStripeWebhookSecret } from "@/lib/billing/stripe";
+import { isStripeConfigured } from "@/lib/billing/config";
 
 export async function POST(request: NextRequest) {
+  if (!isStripeConfigured()) {
+    return NextResponse.json(
+      { error: "Billing is not yet available." },
+      { status: 503 },
+    );
+  }
+
   const body = await request.text();
   const signature = request.headers.get("stripe-signature");
 
@@ -77,17 +85,9 @@ async function handleSubscriptionChange(
     updated_at: new Date().toISOString(),
   };
 
-  const { data: existing } = await supabase
+  await supabase
     .from("subscriptions")
-    .select("id")
-    .eq("stripe_subscription_id", subscription.id)
-    .single();
-
-  if (existing) {
-    await supabase.from("subscriptions").update(record).eq("id", existing.id);
-  } else {
-    await supabase.from("subscriptions").insert(record);
-  }
+    .upsert(record, { onConflict: "stripe_subscription_id" });
 }
 
 async function handleSubscriptionDeleted(

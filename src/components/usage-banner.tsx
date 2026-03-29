@@ -3,13 +3,22 @@
 import { useEffect, useState } from "react";
 import type { UsageStatus } from "@/lib/billing/usage";
 
+interface UsageWithBilling extends UsageStatus {
+  readonly billingEnabled: boolean;
+}
+
 export function UsageBanner() {
-  const [usage, setUsage] = useState<UsageStatus | null>(null);
+  const [usage, setUsage] = useState<UsageWithBilling | null>(null);
 
   useEffect(() => {
     fetch("/api/billing/usage")
-      .then((r) => r.json())
-      .then(setUsage)
+      .then((r) => {
+        if (!r.ok) return null;
+        return r.json();
+      })
+      .then((data) => {
+        if (data) setUsage(data);
+      })
       .catch(() => {});
   }, []);
 
@@ -34,13 +43,18 @@ export function UsageBanner() {
         )}
       </div>
       <div className="flex items-center gap-3">
-        {usage.plan === "free" && (
+        {usage.plan === "free" && usage.billingEnabled && (
           <a
             href="/pricing"
             className="text-sm text-sand-600 hover:text-sand-900 underline underline-offset-2 transition-colors"
           >
             Upgrade to Pro
           </a>
+        )}
+        {usage.plan === "free" && !usage.billingEnabled && (
+          <span className="text-sm text-sand-400">
+            Pro coming soon
+          </span>
         )}
         {usage.plan === "pro" && <ManageBillingButton />}
       </div>

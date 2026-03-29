@@ -4,6 +4,8 @@ import { runScan, validateTarget } from "@/lib/scanner";
 import { createSupabaseServer } from "@/lib/supabase/server";
 import { createSupabaseAdmin } from "@/lib/supabase/admin";
 import { checkScanAllowed, incrementUsage } from "@/lib/billing/usage";
+import { isStripeConfigured } from "@/lib/billing/config";
+import { checkRateLimit, rateLimitResponse, RATE_LIMITS } from "@/lib/rate-limit";
 import { getOrCreatePreferences, buildUnsubscribeUrl } from "@/lib/email/preferences";
 import { sendScanResultsEmail } from "@/lib/email/send";
 import type { ScanTarget, Severity } from "@/types/scanner";
@@ -24,6 +26,15 @@ export async function POST(request: NextRequest) {
     );
   }
 
+  // Rate limit: prevent request flooding independent of usage quotas
+  const adminClient = createSupabaseAdmin();
+  const rateLimitAllowed = await checkRateLimit(
+    adminClient,
+    `scan:${user.id}`,
+    RATE_LIMITS.scan,
+  );
+  if (!rateLimitAllowed) return rateLimitResponse();
+
   // Check usage limits before proceeding
   const { allowed, reason, usage } = await checkScanAllowed(
     supabase,
@@ -31,8 +42,11 @@ export async function POST(request: NextRequest) {
   );
 
   if (!allowed) {
+    const message = isStripeConfigured()
+      ? reason
+      : `Monthly scan limit reached (${usage.scansUsed}/${usage.scansLimit}). Pro is coming soon -- enter your email on the pricing page for early access.`;
     return NextResponse.json(
-      { error: reason, usage },
+      { error: message, usage },
       { status: 429 },
     );
   }

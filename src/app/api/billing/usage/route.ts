@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { createSupabaseServer } from "@/lib/supabase/server";
 import { getUsageStatus } from "@/lib/billing/usage";
+import { isStripeConfigured } from "@/lib/billing/config";
 
 export async function GET() {
   const supabase = await createSupabaseServer();
@@ -16,6 +17,7 @@ export async function GET() {
     );
   }
 
+  const billingEnabled = isStripeConfigured();
   const usage = await getUsageStatus(supabase, user.id);
-  return NextResponse.json(usage);
+  return NextResponse.json({ ...usage, billingEnabled });
 }

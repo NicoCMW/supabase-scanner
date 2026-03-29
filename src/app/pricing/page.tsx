@@ -2,8 +2,12 @@
 
 import { useState } from "react";
 import { PLANS } from "@/lib/billing/plans";
+import { isBillingEnabled } from "@/lib/billing/config";
 import { trackCheckoutStarted } from "@/lib/analytics/datalayer";
 import { SiteHeader } from "@/components/site-header";
+import { WaitlistForm } from "@/components/waitlist-form";
+
+const billingEnabled = isBillingEnabled();
 
 export default function PricingPage() {
   const [loading, setLoading] = useState(false);
@@ -77,13 +81,22 @@ export default function PricingPage() {
               <li>Scan history</li>
               <li>Priority support</li>
             </ul>
-            <button
-              onClick={handleUpgrade}
-              disabled={loading}
-              className="block w-full text-center py-2.5 rounded-lg bg-sand-900 hover:bg-sand-700 text-white font-medium text-sm transition-colors disabled:opacity-50"
-            >
-              {loading ? "Redirecting..." : "Upgrade to Pro"}
-            </button>
+            {billingEnabled ? (
+              <button
+                onClick={handleUpgrade}
+                disabled={loading}
+                className="block w-full text-center py-2.5 rounded-lg bg-sand-900 hover:bg-sand-700 text-white font-medium text-sm transition-colors disabled:opacity-50"
+              >
+                {loading ? "Redirecting..." : "Upgrade to Pro"}
+              </button>
+            ) : (
+              <div className="space-y-3">
+                <p className="text-xs text-sand-500 text-center">
+                  Pro is coming soon. Get notified when it launches:
+                </p>
+                <WaitlistForm />
+              </div>
+            )}
           </div>
         </div>
       </div>
