@@ -1,5 +1,6 @@
 import { ImageResponse } from "next/og";
 import { createSupabaseAdmin } from "@/lib/supabase/admin";
+import { siteConfig } from "@/lib/seo/config";
 
 export const runtime = "edge";
 export const alt = "SupaScanner Security Grade";
@@ -165,7 +166,7 @@ export default async function Image({
             color: "#a8a29e",
           }}
         >
-          supabase-scanner.vercel.app
+          {siteConfig.url.replace(/^https?:\/\//, "")}
         </div>
       </div>
     ),

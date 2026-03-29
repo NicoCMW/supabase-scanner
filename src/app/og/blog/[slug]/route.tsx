@@ -1,5 +1,6 @@
 import { ImageResponse } from "next/og";
 import { getPostBySlug } from "@/lib/seo/blog";
+import { siteConfig } from "@/lib/seo/config";
 
 export const runtime = "edge";
 
@@ -83,7 +84,7 @@ export async function GET(
             SS
           </div>
           <div style={{ fontSize: "18px", color: "#57534e" }}>
-            supabase-scanner.vercel.app
+            {siteConfig.url.replace(/^https?:\/\//, "")}
           </div>
         </div>
       </div>

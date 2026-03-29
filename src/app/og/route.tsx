@@ -64,7 +64,7 @@ export async function GET() {
             color: "#a8a29e",
           }}
         >
-          supabase-scanner.vercel.app
+          {siteConfig.url.replace(/^https?:\/\//, "")}
         </div>
       </div>
     ),

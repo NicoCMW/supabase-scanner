@@ -158,7 +158,7 @@ export async function POST(request: NextRequest, context: RouteContext) {
     .single();
 
   // Send invite email (fire-and-forget)
-  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? "https://supascanner.com";
+  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? "https://supabase-scanner.vercel.app";
   const inviteUrl = `${siteUrl}/invite/${inviteToken}`;
 
   resend.emails
