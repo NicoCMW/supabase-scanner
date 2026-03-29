@@ -1,9 +1,9 @@
 import type { Metadata } from "next";
-import { createSupabaseServer } from "@/lib/supabase/server";
 import { siteConfig } from "@/lib/seo/config";
-import { redirect } from "next/navigation";
 import { WaitlistForm } from "@/components/waitlist-form";
 import { SiteHeader } from "@/components/site-header";
+
+export const dynamic = "force-static";
 
 export const metadata: Metadata = {
   title: "SupaScanner - Find RLS Gaps Before Your Users Do",
@@ -13,16 +13,7 @@ export const metadata: Metadata = {
   },
 };
 
-export default async function Home() {
-  const supabase = await createSupabaseServer();
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
-
-  if (user) {
-    redirect("/dashboard");
-  }
-
+export default function Home() {
   return (
     <main className="min-h-screen" id="main-content">
       <SiteHeader />

@@ -4,6 +4,8 @@ import { siteConfig } from "@/lib/seo/config";
 import { Breadcrumbs } from "@/components/breadcrumbs";
 import { SiteHeader } from "@/components/site-header";
 
+export const revalidate = 3600;
+
 export const metadata: Metadata = {
   title: "Blog",
   description:

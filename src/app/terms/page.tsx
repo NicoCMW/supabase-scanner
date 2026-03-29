@@ -1,6 +1,8 @@
 import type { Metadata } from "next";
 import { siteConfig } from "@/lib/seo/config";
 
+export const dynamic = "force-static";
+
 export const metadata: Metadata = {
   title: "Terms of Service",
   description:
