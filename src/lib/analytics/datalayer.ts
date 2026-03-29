@@ -54,3 +54,52 @@ export function trackPageView(): void {
     page_title: document.title,
   });
 }
+
+export function trackCheckoutStarted(
+  planName: string,
+  planPrice: number,
+): void {
+  pushEvent({
+    event: "checkout_started",
+    plan_name: planName,
+    plan_price: planPrice,
+  });
+}
+
+export function trackCheckoutCompleted(
+  planName: string,
+  transactionId: string,
+): void {
+  pushEvent({
+    event: "checkout_completed",
+    plan_name: planName,
+    transaction_id: transactionId,
+  });
+}
+
+export function trackScheduleCreated(
+  frequency: string,
+): void {
+  pushEvent({
+    event: "schedule_created",
+    frequency,
+  });
+}
+
+export function trackTeamCreated(): void {
+  pushEvent({
+    event: "team_created",
+  });
+}
+
+export function trackReferralShared(): void {
+  pushEvent({
+    event: "referral_shared",
+  });
+}
+
+export function trackScanShared(): void {
+  pushEvent({
+    event: "scan_shared",
+  });
+}

@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { trackScanShared } from "@/lib/analytics/datalayer";
 
 interface ShareButtonProps {
   readonly scanJobId: string;
@@ -41,6 +42,7 @@ export function ShareButton({ scanJobId }: ShareButtonProps) {
 
     const data = (await res.json()) as { shareId: string };
     setState({ status: "ready", shareId: data.shareId });
+    trackScanShared();
     return data.shareId;
   }
 

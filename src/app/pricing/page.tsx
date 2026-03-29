@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { PLANS } from "@/lib/billing/plans";
+import { trackCheckoutStarted } from "@/lib/analytics/datalayer";
 import { SiteHeader } from "@/components/site-header";
 
 export default function PricingPage() {
@@ -9,6 +10,7 @@ export default function PricingPage() {
 
   async function handleUpgrade() {
     setLoading(true);
+    trackCheckoutStarted(PLANS.pro.name, PLANS.pro.priceMonthly);
     try {
       const res = await fetch("/api/billing/checkout", { method: "POST" });
       const data = await res.json();

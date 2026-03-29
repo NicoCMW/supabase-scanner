@@ -1,6 +1,7 @@
 "use client";
 
 import { useCallback, useEffect, useState } from "react";
+import { trackScheduleCreated } from "@/lib/analytics/datalayer";
 
 interface Schedule {
   readonly id: string;
@@ -85,6 +86,7 @@ export function ScheduleManager() {
       return;
     }
 
+    trackScheduleCreated(frequency);
     setShowForm(false);
     await fetchSchedules();
   }

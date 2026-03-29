@@ -3,7 +3,7 @@
 import { useEffect } from "react";
 import { useSearchParams } from "next/navigation";
 import { trackSignup, trackUpgradeToPro } from "@/lib/analytics/gtag";
-import { trackAccountCreated } from "@/lib/analytics/datalayer";
+import { trackAccountCreated, trackCheckoutCompleted } from "@/lib/analytics/datalayer";
 
 async function sha256(input: string): Promise<string> {
   const data = new TextEncoder().encode(input);
@@ -27,6 +27,8 @@ export function AnalyticsEvents() {
     }
     if (searchParams.get("upgraded") === "true") {
       trackUpgradeToPro();
+      const sessionId = searchParams.get("session_id") ?? "";
+      trackCheckoutCompleted("Pro", sessionId);
     }
   }, [searchParams]);
 

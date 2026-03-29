@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
+import { trackTeamCreated } from "@/lib/analytics/datalayer";
 
 function generateSlugPreview(name: string): string {
   return name
@@ -38,6 +39,7 @@ export default function NewTeamPage() {
     const data = await res.json();
 
     if (res.ok) {
+      trackTeamCreated();
       router.push(`/dashboard/teams/${data.team.id}`);
     } else {
       setError(data.error ?? "Failed to create team");

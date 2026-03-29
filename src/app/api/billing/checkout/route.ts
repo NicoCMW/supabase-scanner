@@ -3,6 +3,7 @@ import { createSupabaseServer } from "@/lib/supabase/server";
 import { createSupabaseAdmin } from "@/lib/supabase/admin";
 import { getStripe } from "@/lib/billing/stripe";
 import { PLANS } from "@/lib/billing/plans";
+import { checkRateLimit, rateLimitResponse, RATE_LIMITS } from "@/lib/rate-limit";
 
 export async function POST(request: NextRequest) {
   const supabase = await createSupabaseServer();
@@ -17,6 +18,14 @@ export async function POST(request: NextRequest) {
       { status: 401 },
     );
   }
+
+  const adminClient = createSupabaseAdmin();
+  const allowed = await checkRateLimit(
+    adminClient,
+    `billing:checkout:${user.id}`,
+    RATE_LIMITS.billing,
+  );
+  if (!allowed) return rateLimitResponse();
 
   const stripe = getStripe();
   const priceId = PLANS.pro.stripePriceId;
@@ -59,7 +68,7 @@ export async function POST(request: NextRequest) {
     customer: stripeCustomerId,
     mode: "subscription",
     line_items: [{ price: priceId, quantity: 1 }],
-    success_url: `${origin}/dashboard?upgraded=true`,
+    success_url: `${origin}/dashboard?upgraded=true&session_id={CHECKOUT_SESSION_ID}`,
     cancel_url: `${origin}/pricing`,
     subscription_data: {
       metadata: { supabase_user_id: user.id },
