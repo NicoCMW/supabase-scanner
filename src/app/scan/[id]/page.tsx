@@ -3,6 +3,7 @@ import { createSupabaseServer } from "@/lib/supabase/server";
 import { GradeBadge } from "@/components/grade-badge";
 import { FindingCard } from "@/components/finding-card";
 import { ShareButton } from "@/components/share-button";
+import { SocialShareRow } from "@/components/social-share-row";
 import { GetBadgeButton } from "@/components/get-badge-button";
 import type { Grade, Severity, FindingCategory, Finding } from "@/types/scanner";
 
@@ -126,6 +127,19 @@ export default async function ScanDetailPage({ params }: PageProps) {
             />
             <StatBox label="Low" count={lowCount} color="text-blue-600" />
           </div>
+        </div>
+      )}
+
+      {scanJob.status === "completed" && scanJob.grade && (
+        <div className="flex items-center gap-3 mb-6">
+          <span className="text-sm font-medium text-sand-700">
+            Share your grade
+          </span>
+          <SocialShareRow
+            grade={scanJob.grade as string}
+            totalFindings={scanJob.total_findings ?? 0}
+            scanJobId={id}
+          />
         </div>
       )}
 

@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { createSupabaseAdmin } from "@/lib/supabase/admin";
 import { GradeBadge } from "@/components/grade-badge";
+import { SocialShareRow } from "@/components/social-share-row";
 import { siteConfig } from "@/lib/seo/config";
 import type { Grade } from "@/types/scanner";
 
@@ -105,10 +106,21 @@ export default async function SharedResultPage({ params }: PageProps) {
           />
         </div>
 
-        <p className="text-xs text-sand-400 mb-8">
+        <p className="text-xs text-sand-400 mb-6">
           {result.total_findings} finding
           {result.total_findings !== 1 ? "s" : ""} detected
         </p>
+
+        <div className="mb-8">
+          <p className="text-sm font-medium text-sand-700 mb-3">
+            Share your results
+          </p>
+          <SocialShareRow
+            grade={result.grade}
+            totalFindings={result.total_findings}
+            shareUrl={`${siteConfig.url}/results/${shareId}`}
+          />
+        </div>
 
         <a
           href="/scan"
