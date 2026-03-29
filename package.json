@@ -7,7 +7,7 @@
   ],
   "scripts": {
     "dev": "next dev",
-    "build": "next build",
+    "build": "npm run -w packages/scanner-core build && next build",
     "start": "next start",
     "lint": "next lint",
     "test": "vitest run",
