@@ -1,9 +1,10 @@
 "use client";
 
-import { Suspense, useState } from "react";
+import { Suspense, useEffect, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { ScanForm } from "@/components/scan-form";
 import { ScanResults } from "@/components/scan-results";
+import { PostScanCta } from "@/components/post-scan-cta";
 import type { Grade, ScanModuleResult } from "@/types/scanner";
 
 interface ScanResponse {
@@ -22,6 +23,14 @@ function ScanPageInner() {
   const initialUrl = searchParams.get("url") ?? undefined;
   const [result, setResult] = useState<ScanResponse | null>(null);
   const [error, setError] = useState<string | null>(null);
+  const [isFreePlan, setIsFreePlan] = useState(false);
+
+  useEffect(() => {
+    fetch("/api/billing/usage")
+      .then((r) => r.json())
+      .then((data) => setIsFreePlan(data.plan === "free"))
+      .catch(() => {});
+  }, []);
 
   function handleScanComplete(data: unknown) {
     setError(null);
@@ -57,13 +66,18 @@ function ScanPageInner() {
       )}
 
       {result ? (
-        <ScanResults
-          grade={result.grade}
-          totalFindings={result.totalFindings}
-          modules={result.modules}
-          durationMs={result.durationMs}
-          onReset={handleReset}
-        />
+        <>
+          <ScanResults
+            grade={result.grade}
+            totalFindings={result.totalFindings}
+            modules={result.modules}
+            durationMs={result.durationMs}
+            onReset={handleReset}
+          />
+          {isFreePlan && (
+            <PostScanCta totalFindings={result.totalFindings} />
+          )}
+        </>
       ) : (
         <div className="flex flex-col items-center">
           <p className="text-sand-500 mb-6 text-center max-w-xl text-sm leading-relaxed">

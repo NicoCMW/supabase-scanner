@@ -11,6 +11,8 @@ import { ExportButton } from "@/components/export-button";
 import { DashboardStats } from "@/components/dashboard-stats";
 import { ScheduleManager } from "@/components/schedule-manager";
 import { ComparisonSummary } from "@/components/comparison-summary";
+import { WelcomeBanner } from "@/components/welcome-banner";
+import { EmptyDashboard } from "@/components/empty-dashboard";
 import type { Grade } from "@/types/scanner";
 
 interface ScanJobRow {
@@ -115,38 +117,49 @@ export default async function DashboardPage() {
       <Suspense>
         <AnalyticsEvents />
       </Suspense>
-      <UsageBanner />
 
-      {completedScans.length > 0 && (
-        <div className="mb-6">
-          <DashboardStats scanJobs={completedScans as readonly (ScanJobRow & { grade: Grade })[]} />
-        </div>
+      <Suspense>
+        <WelcomeBanner />
+      </Suspense>
+
+      {jobs.length === 0 ? (
+        <EmptyDashboard />
+      ) : (
+        <>
+          <UsageBanner />
+
+          {completedScans.length > 0 && (
+            <div className="mb-6">
+              <DashboardStats scanJobs={completedScans as readonly (ScanJobRow & { grade: Grade })[]} />
+            </div>
+          )}
+
+          {completedScans.length >= 2 && (
+            <div className="mb-6">
+              <TrendChart
+                scans={completedScans.map((j) => ({
+                  grade: j.grade!,
+                  created_at: j.created_at,
+                }))}
+              />
+            </div>
+          )}
+
+          {latestPair && (
+            <div className="mb-6">
+              <ComparisonSummary pair={latestPair} />
+            </div>
+          )}
+
+          {isPro && (
+            <div className="mb-6">
+              <ScheduleManager />
+            </div>
+          )}
+
+          <ScanHistory scanJobs={jobs} />
+        </>
       )}
-
-      {completedScans.length >= 2 && (
-        <div className="mb-6">
-          <TrendChart
-            scans={completedScans.map((j) => ({
-              grade: j.grade!,
-              created_at: j.created_at,
-            }))}
-          />
-        </div>
-      )}
-
-      {latestPair && (
-        <div className="mb-6">
-          <ComparisonSummary pair={latestPair} />
-        </div>
-      )}
-
-      {isPro && (
-        <div className="mb-6">
-          <ScheduleManager />
-        </div>
-      )}
-
-      <ScanHistory scanJobs={jobs} />
     </main>
   );
 }
