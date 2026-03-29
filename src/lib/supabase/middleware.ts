@@ -1,7 +1,32 @@
 import { createServerClient } from "@supabase/ssr";
 import { NextResponse, type NextRequest } from "next/server";
 
+const STATIC_PUBLIC_ROUTES = new Set([
+  "/",
+  "/blog",
+  "/pricing",
+  "/privacy",
+  "/terms",
+  "/security-checklist",
+]);
+
+function isStaticPublicRoute(pathname: string): boolean {
+  return (
+    STATIC_PUBLIC_ROUTES.has(pathname) ||
+    pathname.startsWith("/blog/")
+  );
+}
+
 export async function updateSession(request: NextRequest) {
+  const pathname = request.nextUrl.pathname;
+
+  // Skip auth check for static public routes so Vercel can serve them
+  // from CDN edge cache. Authenticated-user redirect for "/" is handled
+  // client-side to preserve static caching.
+  if (isStaticPublicRoute(pathname)) {
+    return NextResponse.next();
+  }
+
   let supabaseResponse = NextResponse.next({ request });
 
   const supabase = createServerClient(
@@ -29,18 +54,9 @@ export async function updateSession(request: NextRequest) {
     data: { user },
   } = await supabase.auth.getUser();
 
-  const pathname = request.nextUrl.pathname;
-
   const isPublicRoute =
-    pathname === "/" ||
     pathname === "/login" ||
     pathname.startsWith("/auth/") ||
-    pathname === "/blog" ||
-    pathname.startsWith("/blog/") ||
-    pathname === "/pricing" ||
-    pathname === "/privacy" ||
-    pathname === "/terms" ||
-    pathname === "/security-checklist" ||
     pathname === "/sitemap.xml" ||
     pathname === "/robots.txt" ||
     pathname.startsWith("/api/") ||
@@ -55,7 +71,7 @@ export async function updateSession(request: NextRequest) {
   const isAuthPage =
     pathname === "/login" || pathname.startsWith("/auth/");
 
-  if (user && (isAuthPage || pathname === "/")) {
+  if (user && isAuthPage) {
     const url = request.nextUrl.clone();
     url.pathname = "/dashboard";
     return NextResponse.redirect(url);
