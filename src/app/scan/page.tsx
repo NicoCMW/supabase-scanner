@@ -5,6 +5,7 @@ import { useRouter, useSearchParams } from "next/navigation";
 import { ScanForm } from "@/components/scan-form";
 import { ScanResults } from "@/components/scan-results";
 import { PostScanCta } from "@/components/post-scan-cta";
+import { DownloadReportButton } from "@/components/download-report-button";
 import type { Grade, ScanModuleResult, FindingCategory } from "@/types/scanner";
 
 interface ScanResponse {
@@ -74,6 +75,12 @@ function ScanPageInner() {
             durationMs={result.durationMs}
             onReset={handleReset}
           />
+          <div className="w-full max-w-3xl mt-4">
+            <DownloadReportButton
+              scanJobId={result.scanJobId}
+              isFreePlan={isFreePlan}
+            />
+          </div>
           {isFreePlan && <ScanNudges result={result} />}
         </>
       ) : (
