@@ -1,6 +1,7 @@
 import { redirect } from "next/navigation";
 import { createSupabaseServer } from "@/lib/supabase/server";
 import { SlackWebhookManager } from "@/components/slack-webhook-manager";
+import { WebhookManager } from "@/components/webhook-manager";
 
 export default async function IntegrationsPage() {
   const supabase = await createSupabaseServer();
@@ -32,6 +33,10 @@ export default async function IntegrationsPage() {
 
       <section className="mb-8">
         <SlackWebhookManager />
+      </section>
+
+      <section className="mb-8">
+        <WebhookManager />
       </section>
     </main>
   );

@@ -9,6 +9,7 @@ import { checkScanRateLimits, checkProjectRateLimit, rateLimitResponse } from "@
 import { getOrCreatePreferences, buildUnsubscribeUrl } from "@/lib/email/preferences";
 import { sendScanResultsEmail } from "@/lib/email/send";
 import { notifySlackOnScanComplete } from "@/lib/slack/notifications";
+import { notifyWebhooksOnScanComplete } from "@/lib/webhooks/notifications";
 import type { ScanTarget, Severity } from "@/types/scanner";
 
 export const maxDuration = 60;
@@ -198,6 +199,24 @@ export async function POST(request: NextRequest) {
     }).catch((err) => {
       Sentry.captureException(err, {
         extra: { context: "slack_scan_notification", userId: user.id },
+      });
+    });
+
+    // Send generic webhook notifications (fire-and-forget)
+    notifyWebhooksOnScanComplete(adminClient, user.id, {
+      grade: result.grade,
+      totalFindings: result.totalFindings,
+      criticalCount: countBySeverity("critical"),
+      highCount: countBySeverity("high"),
+      mediumCount: countBySeverity("medium"),
+      lowCount: countBySeverity("low"),
+      scanUrl: `${siteUrl}/scan/${scanJob.id}`,
+      supabaseUrl: target.supabaseUrl,
+      durationMs: result.durationMs,
+      scanJobId: scanJob.id,
+    }).catch((err) => {
+      Sentry.captureException(err, {
+        extra: { context: "webhook_scan_notification", userId: user.id },
       });
     });
 
