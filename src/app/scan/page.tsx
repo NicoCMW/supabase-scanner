@@ -5,7 +5,7 @@ import { useRouter, useSearchParams } from "next/navigation";
 import { ScanForm } from "@/components/scan-form";
 import { ScanResults } from "@/components/scan-results";
 import { PostScanCta } from "@/components/post-scan-cta";
-import type { Grade, ScanModuleResult } from "@/types/scanner";
+import type { Grade, ScanModuleResult, FindingCategory } from "@/types/scanner";
 
 interface ScanResponse {
   readonly scanJobId: string;
@@ -74,9 +74,7 @@ function ScanPageInner() {
             durationMs={result.durationMs}
             onReset={handleReset}
           />
-          {isFreePlan && (
-            <PostScanCta totalFindings={result.totalFindings} />
-          )}
+          {isFreePlan && <ScanNudges result={result} />}
         </>
       ) : (
         <div className="flex flex-col items-center">
@@ -92,6 +90,31 @@ function ScanPageInner() {
         </div>
       )}
     </main>
+  );
+}
+
+function ScanNudges({ result }: { readonly result: ScanResponse }) {
+  const allFindings = result.modules.flatMap((m) => m.findings);
+  const criticalCount = allFindings.filter(
+    (f) => f.severity === "critical",
+  ).length;
+  const highCount = allFindings.filter((f) => f.severity === "high").length;
+  const mediumCount = allFindings.filter((f) => f.severity === "medium").length;
+  const lowCount = allFindings.filter((f) => f.severity === "low").length;
+  const categories = [
+    ...new Set(allFindings.map((f) => f.category)),
+  ] as FindingCategory[];
+
+  return (
+    <PostScanCta
+      totalFindings={result.totalFindings}
+      grade={result.grade}
+      criticalCount={criticalCount}
+      highCount={highCount}
+      mediumCount={mediumCount}
+      lowCount={lowCount}
+      categories={categories}
+    />
   );
 }
 
