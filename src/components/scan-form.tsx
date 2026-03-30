@@ -11,9 +11,10 @@ interface ScanFormProps {
   readonly onScanComplete: (result: unknown) => void;
   readonly onScanError: (error: string) => void;
   readonly initialUrl?: string;
+  readonly forceRescan?: boolean;
 }
 
-export function ScanForm({ onScanComplete, onScanError, initialUrl }: ScanFormProps) {
+export function ScanForm({ onScanComplete, onScanError, initialUrl, forceRescan }: ScanFormProps) {
   const [supabaseUrl, setSupabaseUrl] = useState(initialUrl ?? "");
   const [anonKey, setAnonKey] = useState("");
   const [scanning, setScanning] = useState(false);
@@ -28,7 +29,7 @@ export function ScanForm({ onScanComplete, onScanError, initialUrl }: ScanFormPr
       const response = await fetch("/api/scan", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ supabaseUrl, anonKey }),
+        body: JSON.stringify({ supabaseUrl, anonKey, ...(forceRescan ? { forceRescan: true } : {}) }),
       });
 
       const data = await response.json();

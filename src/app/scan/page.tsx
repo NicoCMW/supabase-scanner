@@ -18,6 +18,9 @@ interface ScanResponse {
   readonly durationMs: number;
   readonly startedAt: string;
   readonly completedAt: string;
+  readonly cached?: boolean;
+  readonly cachedAt?: string;
+  readonly cacheAgeSeconds?: number;
 }
 
 function ScanPageInner() {
@@ -27,6 +30,7 @@ function ScanPageInner() {
   const [result, setResult] = useState<ScanResponse | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [isFreePlan, setIsFreePlan] = useState(false);
+  const [forceRescan, setForceRescan] = useState(false);
 
   useEffect(() => {
     fetch("/api/billing/usage")
@@ -37,6 +41,7 @@ function ScanPageInner() {
 
   function handleScanComplete(data: unknown) {
     setError(null);
+    setForceRescan(false);
     setResult(data as ScanResponse);
   }
 
@@ -46,6 +51,13 @@ function ScanPageInner() {
   }
 
   function handleReset() {
+    setResult(null);
+    setError(null);
+    setForceRescan(false);
+  }
+
+  function handleRescan() {
+    setForceRescan(true);
     setResult(null);
     setError(null);
   }
@@ -76,6 +88,9 @@ function ScanPageInner() {
             modules={result.modules}
             durationMs={result.durationMs}
             onReset={handleReset}
+            cached={result.cached}
+            cacheAgeSeconds={result.cacheAgeSeconds}
+            onRescan={handleRescan}
           />
           <div className="w-full max-w-3xl mt-4 flex flex-wrap gap-3">
             <DownloadReportButton
@@ -104,6 +119,7 @@ function ScanPageInner() {
             onScanComplete={handleScanComplete}
             onScanError={handleScanError}
             initialUrl={initialUrl}
+            forceRescan={forceRescan}
           />
         </div>
       )}

@@ -10,6 +10,7 @@ import {
   requireTeamRole,
   isTeamMembership,
 } from "@/lib/teams/auth";
+import { getCachedScan, recordCacheEvent } from "@/lib/cache/scan-cache";
 import type { ScanTarget } from "@/types/scanner";
 
 export const maxDuration = 60;
@@ -111,7 +112,7 @@ export async function POST(request: NextRequest, context: RouteContext) {
     );
   }
 
-  const { anonKey } = body as Record<string, unknown>;
+  const { anonKey, forceRescan } = body as Record<string, unknown>;
 
   if (typeof anonKey !== "string") {
     return NextResponse.json(
@@ -131,6 +132,22 @@ export async function POST(request: NextRequest, context: RouteContext) {
       { error: "Invalid scan target", details: validation.errors },
       { status: 422 },
     );
+  }
+
+  // Check cache unless the user explicitly requests a fresh scan
+  if (forceRescan !== true) {
+    try {
+      const cached = await getCachedScan(adminClient, target.supabaseUrl, plan);
+      if (cached) {
+        recordCacheEvent(adminClient, true).catch(() => {});
+        return NextResponse.json(cached);
+      }
+    } catch (err) {
+      Sentry.captureException(err, {
+        extra: { context: "team_scan_cache_lookup", userId: user.id, teamId, projectId },
+      });
+    }
+    recordCacheEvent(adminClient, false).catch(() => {});
   }
 
   // Create scan job linked to team project

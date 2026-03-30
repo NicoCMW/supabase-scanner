@@ -10,6 +10,7 @@ import { getOrCreatePreferences, buildUnsubscribeUrl } from "@/lib/email/prefere
 import { sendScanResultsEmail } from "@/lib/email/send";
 import { notifySlackOnScanComplete } from "@/lib/slack/notifications";
 import { notifyWebhooksOnScanComplete } from "@/lib/webhooks/notifications";
+import { getCachedScan, recordCacheEvent } from "@/lib/cache/scan-cache";
 import type { ScanTarget, Severity } from "@/types/scanner";
 
 export const maxDuration = 60;
@@ -68,7 +69,7 @@ export async function POST(request: NextRequest) {
     );
   }
 
-  const { supabaseUrl, anonKey } = body as Record<string, unknown>;
+  const { supabaseUrl, anonKey, forceRescan } = body as Record<string, unknown>;
 
   if (typeof supabaseUrl !== "string" || typeof anonKey !== "string") {
     return NextResponse.json(
@@ -100,6 +101,22 @@ export async function POST(request: NextRequest) {
       { error: "Invalid scan target", details: validation.errors },
       { status: 422 },
     );
+  }
+
+  // Check cache unless the user explicitly requests a fresh scan
+  if (forceRescan !== true) {
+    try {
+      const cached = await getCachedScan(adminClient, target.supabaseUrl, plan);
+      if (cached) {
+        recordCacheEvent(adminClient, true).catch(() => {});
+        return NextResponse.json(cached);
+      }
+    } catch (err) {
+      Sentry.captureException(err, {
+        extra: { context: "scan_cache_lookup", userId: user.id },
+      });
+    }
+    recordCacheEvent(adminClient, false).catch(() => {});
   }
 
   // Create scan job record

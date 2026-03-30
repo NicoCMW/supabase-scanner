@@ -11,6 +11,17 @@ interface ScanResultsProps {
   readonly modules: readonly ScanModuleResult[];
   readonly durationMs: number;
   readonly onReset: () => void;
+  readonly cached?: boolean;
+  readonly cacheAgeSeconds?: number;
+  readonly onRescan?: () => void;
+}
+
+function formatCacheAge(seconds: number): string {
+  if (seconds < 60) return `${seconds}s ago`;
+  const minutes = Math.round(seconds / 60);
+  if (minutes < 60) return `${minutes}m ago`;
+  const hours = Math.round(minutes / 60);
+  return `${hours}h ago`;
 }
 
 export function ScanResults({
@@ -19,6 +30,9 @@ export function ScanResults({
   modules,
   durationMs,
   onReset,
+  cached,
+  cacheAgeSeconds,
+  onRescan,
 }: ScanResultsProps) {
   const allFindings = modules.flatMap((m) => m.findings);
   const criticalCount = allFindings.filter(
@@ -50,10 +64,25 @@ export function ScanResults({
         </div>
       </div>
 
-      <p className="text-xs text-sand-400">
-        {totalFindings} finding{totalFindings !== 1 ? "s" : ""} in{" "}
-        {(durationMs / 1000).toFixed(1)}s
-      </p>
+      <div className="flex items-center gap-3 text-xs text-sand-400">
+        <p>
+          {totalFindings} finding{totalFindings !== 1 ? "s" : ""} in{" "}
+          {(durationMs / 1000).toFixed(1)}s
+        </p>
+        {cached && cacheAgeSeconds != null && (
+          <span className="inline-flex items-center gap-1.5 px-2 py-0.5 bg-sand-100 border border-sand-200 rounded text-sand-500">
+            Scanned {formatCacheAge(cacheAgeSeconds)}
+            {onRescan && (
+              <button
+                onClick={onRescan}
+                className="text-sand-600 hover:text-sand-900 underline underline-offset-2 transition-colors"
+              >
+                Rescan
+              </button>
+            )}
+          </span>
+        )}
+      </div>
 
       {modules.map((mod) => (
         <div key={mod.module}>
