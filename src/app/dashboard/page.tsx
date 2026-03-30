@@ -14,6 +14,7 @@ import { ComparisonSummary } from "@/components/comparison-summary";
 import { WelcomeBanner } from "@/components/welcome-banner";
 import { WhatsNewBadge } from "@/components/whats-new-badge";
 import { EmptyDashboard } from "@/components/empty-dashboard";
+import { OnboardingGate } from "@/components/onboarding-gate";
 import { getLatestChangelogDate } from "@/lib/changelog";
 import type { Grade } from "@/types/scanner";
 
@@ -138,7 +139,9 @@ export default async function DashboardPage() {
       </Suspense>
 
       {jobs.length === 0 ? (
-        <EmptyDashboard />
+        <Suspense>
+          <OnboardingGate />
+        </Suspense>
       ) : (
         <>
           <UsageBanner />
