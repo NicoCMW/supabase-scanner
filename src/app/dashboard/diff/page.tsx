@@ -41,6 +41,7 @@ const CATEGORY_LABELS: Record<FindingCategory, string> = {
   rls: "Row Level Security",
   storage: "Storage",
   auth: "Authentication",
+  "edge-functions": "Edge Functions",
 };
 
 function countBySeverity(
