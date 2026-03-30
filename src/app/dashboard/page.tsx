@@ -85,6 +85,12 @@ export default async function DashboardPage() {
         </div>
         <div className="flex items-center gap-3">
           <a
+            href="/dashboard/integrations"
+            className="text-sm text-sand-400 hover:text-sand-900 transition-colors"
+          >
+            Integrations
+          </a>
+          <a
             href="/dashboard/referrals"
             className="text-sm text-sand-400 hover:text-sand-900 transition-colors"
           >

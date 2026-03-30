@@ -8,6 +8,7 @@ import { isStripeConfigured } from "@/lib/billing/config";
 import { checkRateLimit, rateLimitResponse, RATE_LIMITS } from "@/lib/rate-limit";
 import { getOrCreatePreferences, buildUnsubscribeUrl } from "@/lib/email/preferences";
 import { sendScanResultsEmail } from "@/lib/email/send";
+import { notifySlackOnScanComplete } from "@/lib/slack/notifications";
 import type { ScanTarget, Severity } from "@/types/scanner";
 
 export const maxDuration = 60;
@@ -141,13 +142,13 @@ export async function POST(request: NextRequest) {
 
     // Send scan results email (fire-and-forget, don't block response)
     const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? "https://supabase-scanner.vercel.app";
+    const allFindings = result.modules.flatMap((m) => m.findings);
+    const countBySeverity = (s: Severity) =>
+      allFindings.filter((f) => f.severity === s).length;
+
     getOrCreatePreferences(adminClient, user.id)
       .then((prefs) => {
         if (!prefs.scan_results_email) return;
-
-        const allFindings = result.modules.flatMap((m) => m.findings);
-        const countBySeverity = (s: Severity) =>
-          allFindings.filter((f) => f.severity === s).length;
 
         return sendScanResultsEmail(user.email ?? "", {
           userName: user.email?.split("@")[0] ?? "there",
@@ -166,6 +167,23 @@ export async function POST(request: NextRequest) {
           extra: { context: "scan_results_email", userId: user.id },
         });
       });
+
+    // Send Slack notifications (fire-and-forget)
+    notifySlackOnScanComplete(adminClient, user.id, {
+      grade: result.grade,
+      totalFindings: result.totalFindings,
+      criticalCount: countBySeverity("critical"),
+      highCount: countBySeverity("high"),
+      mediumCount: countBySeverity("medium"),
+      lowCount: countBySeverity("low"),
+      scanUrl: `${siteUrl}/scan/${scanJob.id}`,
+      supabaseUrl: target.supabaseUrl,
+      durationMs: result.durationMs,
+    }).catch((err) => {
+      Sentry.captureException(err, {
+        extra: { context: "slack_scan_notification", userId: user.id },
+      });
+    });
 
     return NextResponse.json({
       scanJobId: scanJob.id,

@@ -11,6 +11,7 @@ import {
   type ScanSchedule,
   type ScheduleFrequency,
 } from "@/lib/schedules";
+import { notifySlackOnScanComplete } from "@/lib/slack/notifications";
 import type { Severity } from "@/types/scanner";
 
 export const maxDuration = 300;
@@ -134,6 +135,28 @@ export async function POST(request: NextRequest) {
       ).catch((err) => {
         Sentry.captureException(err, {
           extra: { context: "scheduled_scan_email", userId: row.user_id },
+        });
+      });
+
+      // Send Slack notifications (fire-and-forget)
+      const allFindings = result.modules.flatMap((m) => m.findings);
+      const countBySeverity = (s: Severity) =>
+        allFindings.filter((f) => f.severity === s).length;
+
+      notifySlackOnScanComplete(adminClient, row.user_id, {
+        grade: result.grade,
+        totalFindings: result.totalFindings,
+        criticalCount: countBySeverity("critical"),
+        highCount: countBySeverity("high"),
+        mediumCount: countBySeverity("medium"),
+        lowCount: countBySeverity("low"),
+        scanUrl: `${siteUrl}/scan/${scanJob.id}`,
+        supabaseUrl: row.supabase_url,
+        durationMs: result.durationMs,
+        previousGrade: delta.previousGrade as import("@/types/scanner").Grade | null,
+      }).catch((err) => {
+        Sentry.captureException(err, {
+          extra: { context: "slack_scheduled_notification", userId: row.user_id },
         });
       });
 
