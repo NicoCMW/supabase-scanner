@@ -64,6 +64,12 @@ export default function sitemap(): MetadataRoute.Sitemap {
       changeFrequency: "yearly",
       priority: 0.3,
     },
+    {
+      url: `${siteConfig.url}/changelog`,
+      lastModified: new Date(),
+      changeFrequency: "weekly",
+      priority: 0.6,
+    },
   ];
 
   const blogPages: MetadataRoute.Sitemap = getAllPosts().map((post) => ({

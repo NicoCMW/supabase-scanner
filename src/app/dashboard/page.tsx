@@ -6,13 +6,15 @@ import { isProPlan } from "@/lib/billing/plans";
 import { ScanHistory } from "@/components/scan-history";
 import { UsageBanner } from "@/components/usage-banner";
 import { AnalyticsEvents } from "@/components/analytics-events";
-import { TrendChart } from "@/components/trend-chart";
 import { ExportButton } from "@/components/export-button";
 import { DashboardStats } from "@/components/dashboard-stats";
+import { TrendDashboard } from "@/components/trend-dashboard";
 import { ScheduleManager } from "@/components/schedule-manager";
 import { ComparisonSummary } from "@/components/comparison-summary";
 import { WelcomeBanner } from "@/components/welcome-banner";
+import { WhatsNewBadge } from "@/components/whats-new-badge";
 import { EmptyDashboard } from "@/components/empty-dashboard";
+import { getLatestChangelogDate } from "@/lib/changelog";
 import type { Grade } from "@/types/scanner";
 
 interface ScanJobRow {
@@ -84,6 +86,7 @@ export default async function DashboardPage() {
           <p className="text-sand-400 text-sm">{user.email}</p>
         </div>
         <div className="flex items-center gap-3">
+          <WhatsNewBadge latestDate={getLatestChangelogDate()} />
           <a
             href="/dashboard/integrations"
             className="text-sm text-sand-400 hover:text-sand-900 transition-colors"
@@ -148,12 +151,7 @@ export default async function DashboardPage() {
 
           {completedScans.length >= 2 && (
             <div className="mb-6">
-              <TrendChart
-                scans={completedScans.map((j) => ({
-                  grade: j.grade!,
-                  created_at: j.created_at,
-                }))}
-              />
+              <TrendDashboard isPro={isPro} />
             </div>
           )}
 

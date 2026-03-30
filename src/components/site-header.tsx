@@ -15,6 +15,7 @@ const defaultLinks: readonly NavLink[] = [
   { href: "/docs", label: "Docs" },
   { href: "/security-checklist", label: "Checklist" },
   { href: "/blog", label: "Blog" },
+  { href: "/changelog", label: "Changelog" },
   { href: "/pricing", label: "Pricing" },
 ];
 
