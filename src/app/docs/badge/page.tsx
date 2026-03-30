@@ -100,7 +100,7 @@ export default function DocsBadgePage() {
               </p>
               <CodeBlock>{`https://supascanner.com/api/badge/<your-share-id>`}</CodeBlock>
               <p className="text-sand-500 text-sm leading-relaxed">
-                The badge is an SVG image served with a 1-hour cache. It shows
+                The badge is an SVG image served with a 24-hour cache. It shows
                 your project name label and the latest security grade with a
                 color-coded background.
               </p>
@@ -255,7 +255,7 @@ export default function DocsBadgePage() {
               </ul>
               <div className="bg-white border border-sand-200 rounded-lg p-4 text-sm text-sand-500">
                 <p>
-                  The badge SVG is cached for 1 hour. After running a new scan
+                  The badge SVG is cached for 24 hours. After running a new scan
                   and sharing the result, the badge will update within an hour.
                 </p>
               </div>

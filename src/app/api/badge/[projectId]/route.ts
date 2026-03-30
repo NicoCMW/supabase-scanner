@@ -8,6 +8,10 @@ import {
 import type { Grade } from "@/types/scanner";
 
 const VALID_STYLES = new Set<string>(["flat", "flat-square"]);
+const VALID_GRADES = new Set<string>(["A", "B", "C", "D", "F"]);
+
+const CACHE_HIT_SECONDS = 86400; // 24 hours
+const CACHE_MISS_SECONDS = 300; // 5 minutes
 
 function svgResponse(svg: string, cacheSeconds: number): NextResponse {
   return new NextResponse(svg, {
@@ -18,6 +22,35 @@ function svgResponse(svg: string, cacheSeconds: number): NextResponse {
       "Access-Control-Allow-Origin": "*",
     },
   });
+}
+
+async function lookupGrade(
+  supabase: ReturnType<typeof createSupabaseAdmin>,
+  projectId: string,
+): Promise<Grade | null> {
+  // Try shared_results first (share_id lookup)
+  const { data: shared } = await supabase
+    .from("shared_results")
+    .select("grade")
+    .eq("share_id", projectId)
+    .single();
+
+  if (shared?.grade && VALID_GRADES.has(shared.grade)) {
+    return shared.grade as Grade;
+  }
+
+  // Fall back to team_projects (UUID lookup)
+  const { data: teamProject } = await supabase
+    .from("team_projects")
+    .select("last_scan_grade")
+    .eq("id", projectId)
+    .single();
+
+  if (teamProject?.last_scan_grade && VALID_GRADES.has(teamProject.last_scan_grade)) {
+    return teamProject.last_scan_grade as Grade;
+  }
+
+  return null;
 }
 
 export async function GET(
@@ -34,22 +67,15 @@ export async function GET(
   const label = url.searchParams.get("label") ?? "SupaScanner";
 
   if (!projectId || projectId.length < 5) {
-    return svgResponse(generateFallbackBadgeSvg(label, style), 300);
+    return svgResponse(generateFallbackBadgeSvg(label, style), CACHE_MISS_SECONDS);
   }
 
   const supabase = createSupabaseAdmin();
+  const grade = await lookupGrade(supabase, projectId);
 
-  const { data, error } = await supabase
-    .from("shared_results")
-    .select("grade")
-    .eq("share_id", projectId)
-    .single();
-
-  if (error || !data) {
-    return svgResponse(generateFallbackBadgeSvg(label, style), 300);
+  if (!grade) {
+    return svgResponse(generateFallbackBadgeSvg(label, style), CACHE_MISS_SECONDS);
   }
 
-  const grade = data.grade as Grade;
-
-  return svgResponse(generateBadgeSvg({ grade, label, style }), 3600);
+  return svgResponse(generateBadgeSvg({ grade, label, style }), CACHE_HIT_SECONDS);
 }

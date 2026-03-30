@@ -62,6 +62,22 @@ describe("generateBadgeSvg", () => {
     expect(svg).toContain("&quot;alert&quot;");
     expect(svg).not.toContain("<script>");
   });
+
+  it("supports 'Secured by SupaScanner' label variant", () => {
+    const svg = generateBadgeSvg({ grade: "A", label: "Secured by SupaScanner" });
+    expect(svg).toContain("Secured by SupaScanner");
+    expect(svg).toContain("Grade A");
+    // Wider badge due to longer label
+    const defaultSvg = generateBadgeSvg({ grade: "A" });
+    const widthMatch = (s: string) => s.match(/width="(\d+)"/)?.[1] ?? "0";
+    expect(Number(widthMatch(svg))).toBeGreaterThan(Number(widthMatch(defaultSvg)));
+  });
+
+  it("produces consistent output for same inputs", () => {
+    const a = generateBadgeSvg({ grade: "B", label: "Test", style: "flat-square" });
+    const b = generateBadgeSvg({ grade: "B", label: "Test", style: "flat-square" });
+    expect(a).toBe(b);
+  });
 });
 
 describe("generateFallbackBadgeSvg", () => {
