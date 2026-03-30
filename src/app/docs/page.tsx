@@ -247,11 +247,23 @@ export default function DocsQuickStart() {
                   className="block border border-sand-200 rounded-lg p-5 bg-white hover:border-sand-300 transition-colors group"
                 >
                   <p className="text-sm font-semibold text-sand-900 mb-1 group-hover:text-sand-700">
-                    CLI &amp; CI/CD
+                    CLI
                   </p>
                   <p className="text-xs text-sand-500">
-                    Run scans from the terminal or automate them in GitHub
-                    Actions.
+                    Run scans from the terminal with configuration files and
+                    output formats.
+                  </p>
+                </a>
+                <a
+                  href="/docs/github-action"
+                  className="block border border-sand-200 rounded-lg p-5 bg-white hover:border-sand-300 transition-colors group"
+                >
+                  <p className="text-sm font-semibold text-sand-900 mb-1 group-hover:text-sand-700">
+                    GitHub Action
+                  </p>
+                  <p className="text-xs text-sand-500">
+                    Automate scans in CI/CD with PR comments and threshold
+                    gating.
                   </p>
                 </a>
                 <a
@@ -267,6 +279,30 @@ export default function DocsQuickStart() {
                   </p>
                 </a>
                 <a
+                  href="/docs/scanner-core"
+                  className="block border border-sand-200 rounded-lg p-5 bg-white hover:border-sand-300 transition-colors group"
+                >
+                  <p className="text-sm font-semibold text-sand-900 mb-1 group-hover:text-sand-700">
+                    Scanner Core
+                  </p>
+                  <p className="text-xs text-sand-500">
+                    Use @supascanner/core for programmatic scanning and custom
+                    integrations.
+                  </p>
+                </a>
+                <a
+                  href="/docs/badge"
+                  className="block border border-sand-200 rounded-lg p-5 bg-white hover:border-sand-300 transition-colors group"
+                >
+                  <p className="text-sm font-semibold text-sand-900 mb-1 group-hover:text-sand-700">
+                    Badge
+                  </p>
+                  <p className="text-xs text-sand-500">
+                    Embed a live security grade badge in your README or
+                    website.
+                  </p>
+                </a>
+                <a
                   href="/security-checklist"
                   className="block border border-sand-200 rounded-lg p-5 bg-white hover:border-sand-300 transition-colors group"
                 >
@@ -275,17 +311,6 @@ export default function DocsQuickStart() {
                   </p>
                   <p className="text-xs text-sand-500">
                     43-point interactive checklist for manual security review.
-                  </p>
-                </a>
-                <a
-                  href="/pricing"
-                  className="block border border-sand-200 rounded-lg p-5 bg-white hover:border-sand-300 transition-colors group"
-                >
-                  <p className="text-sm font-semibold text-sand-900 mb-1 group-hover:text-sand-700">
-                    Pricing
-                  </p>
-                  <p className="text-xs text-sand-500">
-                    Need unlimited scans? Upgrade to Pro for $29/month.
                   </p>
                 </a>
               </div>

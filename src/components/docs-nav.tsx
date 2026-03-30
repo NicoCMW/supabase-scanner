@@ -1,5 +1,7 @@
 "use client";
 
+import { DocsSearch } from "@/components/docs-search";
+
 interface DocLink {
   readonly href: string;
   readonly label: string;
@@ -12,12 +14,16 @@ interface DocsNavProps {
 const docLinks: readonly DocLink[] = [
   { href: "/docs", label: "Quick Start" },
   { href: "/docs/cli", label: "CLI" },
+  { href: "/docs/github-action", label: "GitHub Action" },
   { href: "/docs/api", label: "API Reference" },
+  { href: "/docs/scanner-core", label: "Scanner Core" },
+  { href: "/docs/badge", label: "Badge" },
 ];
 
 export function DocsNav({ currentPath }: DocsNavProps) {
   return (
     <nav aria-label="Documentation" className="mb-10 md:mb-0 md:w-48 shrink-0">
+      <DocsSearch />
       <p className="text-xs font-semibold uppercase tracking-wider text-sand-400 mb-3">
         Documentation
       </p>

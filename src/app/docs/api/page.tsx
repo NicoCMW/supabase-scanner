@@ -444,16 +444,16 @@ export default function DocsApiPage() {
             {/* Navigation */}
             <section className="mt-14 pt-8 border-t border-sand-200 flex items-center justify-between">
               <a
-                href="/docs/cli"
+                href="/docs/github-action"
                 className="text-sm text-sand-500 hover:text-sand-900 transition-colors"
               >
-                &larr; CLI &amp; CI/CD
+                &larr; GitHub Action
               </a>
               <a
-                href="/docs"
+                href="/docs/scanner-core"
                 className="text-sm text-sand-500 hover:text-sand-900 transition-colors"
               >
-                Quick Start &rarr;
+                Scanner Core &rarr;
               </a>
             </section>
           </article>

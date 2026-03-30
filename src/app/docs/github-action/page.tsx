@@ -5,32 +5,32 @@ import { Breadcrumbs } from "@/components/breadcrumbs";
 import { DocsNav } from "@/components/docs-nav";
 
 export const metadata: Metadata = {
-  title: "CLI & CI/CD Documentation | SupaScanner",
+  title: "GitHub Action Documentation | SupaScanner",
   description:
-    "Install the supascanner CLI to run Supabase security scans from the terminal. Integrate with GitHub Actions for automated CI/CD security gating.",
+    "Automate Supabase security scans in your CI/CD pipeline with the official SupaScanner GitHub Action. PR comments, threshold gating, and workflow examples.",
   keywords: [
-    "supabase security scanner CLI",
-    "supabase security CI/CD",
-    "supabase RLS checker CLI",
-    "supabase github action security",
-    "supascanner CLI",
+    "supabase security github action",
+    "supabase CI/CD security scan",
+    "supascanner github action",
+    "supabase security automation",
+    "supabase RLS github action",
   ],
   alternates: {
-    canonical: `${siteConfig.url}/docs/cli`,
+    canonical: `${siteConfig.url}/docs/github-action`,
   },
   openGraph: {
-    title: "CLI & CI/CD Documentation - SupaScanner",
+    title: "GitHub Action Documentation - SupaScanner",
     description:
-      "Install the supascanner CLI to run Supabase security scans from the terminal and automate them in CI/CD pipelines.",
-    url: `${siteConfig.url}/docs/cli`,
+      "Automate Supabase security scans in CI/CD with the official SupaScanner GitHub Action.",
+    url: `${siteConfig.url}/docs/github-action`,
     type: "website",
     siteName: siteConfig.name,
   },
   twitter: {
     card: "summary_large_image",
-    title: "CLI & CI/CD Documentation - SupaScanner",
+    title: "GitHub Action Documentation - SupaScanner",
     description:
-      "Run Supabase security scans from the terminal and automate them in CI/CD pipelines.",
+      "Automate Supabase security scans in CI/CD with the official SupaScanner GitHub Action.",
   },
 };
 
@@ -55,7 +55,7 @@ function CodeBlock({
   );
 }
 
-export default function DocsCliPage() {
+export default function DocsGitHubActionPage() {
   return (
     <main className="min-h-screen" id="main-content">
       <SiteHeader />
@@ -65,219 +65,30 @@ export default function DocsCliPage() {
           items={[
             { label: "Home", href: "/" },
             { label: "Docs", href: "/docs" },
-            { label: "CLI", href: "/docs/cli" },
+            { label: "GitHub Action", href: "/docs/github-action" },
           ]}
         />
 
         <div className="md:flex md:gap-12">
-          <DocsNav currentPath="/docs/cli" />
+          <DocsNav currentPath="/docs/github-action" />
 
           <article className="min-w-0 max-w-2xl">
             <h1 className="text-3xl sm:text-4xl font-semibold tracking-tight mb-3 text-sand-900">
-              CLI &amp; CI/CD
+              GitHub Action
             </h1>
             <p className="text-sand-500 text-lg mb-10 leading-relaxed">
-              Run security scans from the terminal or automate them in your
-              CI/CD pipeline with the GitHub Action.
+              Run security scans automatically on every PR and push. The action
+              posts results as a PR comment and can gate merges based on
+              severity thresholds.
             </p>
 
-            {/* Installation */}
+            {/* Quick setup */}
             <section className="mb-12">
               <h2 className="text-xl font-semibold text-sand-900 mb-4">
-                Installation
+                Quick setup
               </h2>
               <p className="text-sand-500 text-sm leading-relaxed mb-3">
-                Install the CLI globally via npm:
-              </p>
-              <CodeBlock>npm install -g supascanner</CodeBlock>
-              <p className="text-sand-500 text-sm leading-relaxed">
-                Or run it without installing using{" "}
-                <code className="bg-sand-100 px-1.5 py-0.5 rounded text-sand-700 text-xs">
-                  npx
-                </code>
-                :
-              </p>
-              <CodeBlock>npx supascanner scan --url &lt;url&gt; --key &lt;key&gt;</CodeBlock>
-              <p className="text-sand-400 text-xs">
-                Requires Node.js 18 or later.
-              </p>
-            </section>
-
-            {/* Basic usage */}
-            <section className="mb-12">
-              <h2 className="text-xl font-semibold text-sand-900 mb-4">
-                Basic usage
-              </h2>
-              <CodeBlock>{`supascanner scan \\
-  --url https://abc123def.supabase.co \\
-  --key eyJhbGciOiJIUzI1NiIs...`}</CodeBlock>
-              <p className="text-sand-500 text-sm leading-relaxed mb-4">
-                This runs all three audit modules (RLS, Storage, Auth) and
-                prints results as a table.
-              </p>
-
-              <h3 className="text-base font-semibold text-sand-900 mb-2">
-                Options
-              </h3>
-              <div className="border border-sand-200 rounded-lg overflow-hidden bg-white text-sm">
-                <table className="w-full">
-                  <thead>
-                    <tr className="border-b border-sand-200 bg-sand-50">
-                      <th className="text-left px-4 py-2 font-medium text-sand-700">
-                        Flag
-                      </th>
-                      <th className="text-left px-4 py-2 font-medium text-sand-700">
-                        Default
-                      </th>
-                      <th className="text-left px-4 py-2 font-medium text-sand-700">
-                        Description
-                      </th>
-                    </tr>
-                  </thead>
-                  <tbody className="text-sand-500">
-                    <tr className="border-b border-sand-100">
-                      <td className="px-4 py-2 font-mono text-xs text-sand-700">
-                        --url &lt;url&gt;
-                      </td>
-                      <td className="px-4 py-2">--</td>
-                      <td className="px-4 py-2">Supabase project URL</td>
-                    </tr>
-                    <tr className="border-b border-sand-100">
-                      <td className="px-4 py-2 font-mono text-xs text-sand-700">
-                        --key &lt;key&gt;
-                      </td>
-                      <td className="px-4 py-2">--</td>
-                      <td className="px-4 py-2">Supabase anon / public key</td>
-                    </tr>
-                    <tr className="border-b border-sand-100">
-                      <td className="px-4 py-2 font-mono text-xs text-sand-700">
-                        --format &lt;fmt&gt;
-                      </td>
-                      <td className="px-4 py-2">
-                        <code className="text-xs">table</code>
-                      </td>
-                      <td className="px-4 py-2">
-                        Output format:{" "}
-                        <code className="text-xs">json</code>,{" "}
-                        <code className="text-xs">table</code>, or{" "}
-                        <code className="text-xs">markdown</code>
-                      </td>
-                    </tr>
-                    <tr>
-                      <td className="px-4 py-2 font-mono text-xs text-sand-700">
-                        --threshold &lt;level&gt;
-                      </td>
-                      <td className="px-4 py-2">--</td>
-                      <td className="px-4 py-2">
-                        Exit with code 1 if findings at or above:{" "}
-                        <code className="text-xs">critical</code>,{" "}
-                        <code className="text-xs">high</code>, or{" "}
-                        <code className="text-xs">medium</code>
-                      </td>
-                    </tr>
-                  </tbody>
-                </table>
-              </div>
-            </section>
-
-            {/* Configuration */}
-            <section className="mb-12">
-              <h2 className="text-xl font-semibold text-sand-900 mb-4">
-                Configuration file
-              </h2>
-              <p className="text-sand-500 text-sm leading-relaxed mb-3">
-                Create a{" "}
-                <code className="bg-sand-100 px-1.5 py-0.5 rounded text-sand-700 text-xs">
-                  .supascanner.config.json
-                </code>{" "}
-                in your project root to avoid passing flags every time:
-              </p>
-              <CodeBlock title=".supascanner.config.json">{`{
-  "url": "https://abc123def.supabase.co",
-  "anonKey": "eyJhbGciOiJIUzI1NiIs...",
-  "format": "table",
-  "threshold": "high"
-}`}</CodeBlock>
-              <p className="text-sand-500 text-sm leading-relaxed mb-3">
-                The CLI resolves values in this order:
-              </p>
-              <ol className="list-decimal list-inside text-sm text-sand-500 space-y-1">
-                <li>Command-line flags</li>
-                <li>
-                  <code className="bg-sand-100 px-1.5 py-0.5 rounded text-sand-700 text-xs">
-                    .supascanner.config.json
-                  </code>
-                </li>
-                <li>
-                  Environment variables:{" "}
-                  <code className="bg-sand-100 px-1.5 py-0.5 rounded text-sand-700 text-xs">
-                    SUPABASE_URL
-                  </code>{" "}
-                  and{" "}
-                  <code className="bg-sand-100 px-1.5 py-0.5 rounded text-sand-700 text-xs">
-                    SUPABASE_ANON_KEY
-                  </code>
-                </li>
-              </ol>
-            </section>
-
-            {/* Exit codes */}
-            <section className="mb-12">
-              <h2 className="text-xl font-semibold text-sand-900 mb-4">
-                Exit codes
-              </h2>
-              <div className="border border-sand-200 rounded-lg overflow-hidden bg-white text-sm">
-                <table className="w-full">
-                  <thead>
-                    <tr className="border-b border-sand-200 bg-sand-50">
-                      <th className="text-left px-4 py-2 font-medium text-sand-700">
-                        Code
-                      </th>
-                      <th className="text-left px-4 py-2 font-medium text-sand-700">
-                        Meaning
-                      </th>
-                    </tr>
-                  </thead>
-                  <tbody className="text-sand-500">
-                    <tr className="border-b border-sand-100">
-                      <td className="px-4 py-2 font-mono text-sand-700">0</td>
-                      <td className="px-4 py-2">
-                        Scan completed, no findings above threshold
-                      </td>
-                    </tr>
-                    <tr className="border-b border-sand-100">
-                      <td className="px-4 py-2 font-mono text-sand-700">1</td>
-                      <td className="px-4 py-2">
-                        Findings at or above the configured threshold
-                      </td>
-                    </tr>
-                    <tr>
-                      <td className="px-4 py-2 font-mono text-sand-700">2</td>
-                      <td className="px-4 py-2">
-                        Runtime error (invalid URL, network failure, etc.)
-                      </td>
-                    </tr>
-                  </tbody>
-                </table>
-              </div>
-              <p className="text-sand-400 text-xs mt-2">
-                Use exit code 1 to gate deployments in CI -- the pipeline fails
-                only when real security issues are found.
-              </p>
-            </section>
-
-            {/* GitHub Action */}
-            <section className="mb-12">
-              <h2 className="text-xl font-semibold text-sand-900 mb-4">
-                GitHub Action
-              </h2>
-              <p className="text-sand-500 text-sm leading-relaxed mb-3">
-                The official GitHub Action runs a scan on every PR or push and
-                posts results as a PR comment. Add this workflow to{" "}
-                <code className="bg-sand-100 px-1.5 py-0.5 rounded text-sand-700 text-xs">
-                  .github/workflows/security-scan.yml
-                </code>
-                :
+                Add this workflow file to your repository:
               </p>
               <CodeBlock title=".github/workflows/security-scan.yml">{`name: Supabase Security Scan
 
@@ -305,10 +116,16 @@ jobs:
           supabase-url: \${{ secrets.SUPABASE_URL }}
           supabase-anon-key: \${{ secrets.SUPABASE_ANON_KEY }}
           threshold: "high"`}</CodeBlock>
+              <p className="text-sand-400 text-xs">
+                The action requires Node.js 20, which is set up automatically.
+              </p>
+            </section>
 
-              <h3 className="text-base font-semibold text-sand-900 mb-2 mt-6">
-                Action inputs
-              </h3>
+            {/* Inputs */}
+            <section className="mb-12">
+              <h2 className="text-xl font-semibold text-sand-900 mb-4">
+                Inputs
+              </h2>
               <div className="border border-sand-200 rounded-lg overflow-hidden bg-white text-sm">
                 <table className="w-full">
                   <thead>
@@ -334,7 +151,10 @@ jobs:
                       </td>
                       <td className="px-4 py-2">Yes</td>
                       <td className="px-4 py-2">--</td>
-                      <td className="px-4 py-2">Supabase project URL</td>
+                      <td className="px-4 py-2">
+                        Supabase project URL (e.g.,
+                        https://abc123.supabase.co)
+                      </td>
                     </tr>
                     <tr className="border-b border-sand-100">
                       <td className="px-4 py-2 font-mono text-xs text-sand-700">
@@ -353,7 +173,10 @@ jobs:
                         <code className="text-xs">high</code>
                       </td>
                       <td className="px-4 py-2">
-                        Fail threshold: critical, high, or medium
+                        Fail severity:{" "}
+                        <code className="text-xs">critical</code>,{" "}
+                        <code className="text-xs">high</code>, or{" "}
+                        <code className="text-xs">medium</code>
                       </td>
                     </tr>
                     <tr className="border-b border-sand-100">
@@ -364,7 +187,9 @@ jobs:
                       <td className="px-4 py-2">
                         <code className="text-xs">true</code>
                       </td>
-                      <td className="px-4 py-2">Post results as a PR comment</td>
+                      <td className="px-4 py-2">
+                        Post scan results as a PR comment
+                      </td>
                     </tr>
                     <tr>
                       <td className="px-4 py-2 font-mono text-xs text-sand-700">
@@ -374,15 +199,20 @@ jobs:
                       <td className="px-4 py-2">
                         <code className="text-xs">GITHUB_TOKEN</code>
                       </td>
-                      <td className="px-4 py-2">Token for posting PR comments</td>
+                      <td className="px-4 py-2">
+                        Token for posting PR comments
+                      </td>
                     </tr>
                   </tbody>
                 </table>
               </div>
+            </section>
 
-              <h3 className="text-base font-semibold text-sand-900 mb-2 mt-6">
-                Action outputs
-              </h3>
+            {/* Outputs */}
+            <section className="mb-12">
+              <h2 className="text-xl font-semibold text-sand-900 mb-4">
+                Outputs
+              </h2>
               <div className="border border-sand-200 rounded-lg overflow-hidden bg-white text-sm">
                 <table className="w-full">
                   <thead>
@@ -408,21 +238,27 @@ jobs:
                       <td className="px-4 py-2 font-mono text-xs text-sand-700">
                         total-findings
                       </td>
-                      <td className="px-4 py-2">Total number of findings</td>
+                      <td className="px-4 py-2">
+                        Total number of security findings
+                      </td>
                     </tr>
                     <tr className="border-b border-sand-100">
                       <td className="px-4 py-2 font-mono text-xs text-sand-700">
                         critical-count
                       </td>
-                      <td className="px-4 py-2">Number of critical findings</td>
+                      <td className="px-4 py-2">
+                        Number of critical severity findings
+                      </td>
                     </tr>
                     <tr className="border-b border-sand-100">
                       <td className="px-4 py-2 font-mono text-xs text-sand-700">
                         high-count
                       </td>
-                      <td className="px-4 py-2">Number of high findings</td>
+                      <td className="px-4 py-2">
+                        Number of high severity findings
+                      </td>
                     </tr>
-                    <tr>
+                    <tr className="border-b border-sand-100">
                       <td className="px-4 py-2 font-mono text-xs text-sand-700">
                         threshold-exceeded
                       </td>
@@ -430,20 +266,113 @@ jobs:
                         Whether the threshold was exceeded (true/false)
                       </td>
                     </tr>
+                    <tr>
+                      <td className="px-4 py-2 font-mono text-xs text-sand-700">
+                        report-markdown
+                      </td>
+                      <td className="px-4 py-2">
+                        Path to the generated markdown report file
+                      </td>
+                    </tr>
                   </tbody>
                 </table>
               </div>
             </section>
 
-            {/* Conditional steps example */}
+            {/* PR comments */}
+            <section className="mb-12">
+              <h2 className="text-xl font-semibold text-sand-900 mb-4">
+                PR comments
+              </h2>
+              <p className="text-sand-500 text-sm leading-relaxed mb-3">
+                When{" "}
+                <code className="bg-sand-100 px-1.5 py-0.5 rounded text-sand-700 text-xs">
+                  comment-on-pr
+                </code>{" "}
+                is enabled (the default), the action posts a markdown report as
+                a PR comment on every{" "}
+                <code className="bg-sand-100 px-1.5 py-0.5 rounded text-sand-700 text-xs">
+                  pull_request
+                </code>{" "}
+                event.
+              </p>
+              <div className="bg-white border border-sand-200 rounded-lg p-4 text-sm text-sand-500 space-y-2">
+                <p>
+                  The comment includes a hidden marker so subsequent runs
+                  update the existing comment instead of creating duplicates.
+                </p>
+                <p>
+                  The{" "}
+                  <code className="bg-sand-100 px-1.5 py-0.5 rounded text-sand-700 text-xs">
+                    pull-requests: write
+                  </code>{" "}
+                  permission is required in your workflow for this feature.
+                </p>
+              </div>
+            </section>
+
+            {/* Threshold gating */}
+            <section className="mb-12">
+              <h2 className="text-xl font-semibold text-sand-900 mb-4">
+                Threshold gating
+              </h2>
+              <p className="text-sand-500 text-sm leading-relaxed mb-3">
+                The{" "}
+                <code className="bg-sand-100 px-1.5 py-0.5 rounded text-sand-700 text-xs">
+                  threshold
+                </code>{" "}
+                input controls when the action exits with a failure code:
+              </p>
+              <div className="border border-sand-200 rounded-lg overflow-hidden bg-white text-sm mb-4">
+                <table className="w-full">
+                  <thead>
+                    <tr className="border-b border-sand-200 bg-sand-50">
+                      <th className="text-left px-4 py-2 font-medium text-sand-700">
+                        Threshold
+                      </th>
+                      <th className="text-left px-4 py-2 font-medium text-sand-700">
+                        Fails when findings are
+                      </th>
+                    </tr>
+                  </thead>
+                  <tbody className="text-sand-500">
+                    <tr className="border-b border-sand-100">
+                      <td className="px-4 py-2 font-mono text-xs text-sand-700">
+                        critical
+                      </td>
+                      <td className="px-4 py-2">Critical only</td>
+                    </tr>
+                    <tr className="border-b border-sand-100">
+                      <td className="px-4 py-2 font-mono text-xs text-sand-700">
+                        high
+                      </td>
+                      <td className="px-4 py-2">Critical or high</td>
+                    </tr>
+                    <tr>
+                      <td className="px-4 py-2 font-mono text-xs text-sand-700">
+                        medium
+                      </td>
+                      <td className="px-4 py-2">Critical, high, or medium</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+              <p className="text-sand-500 text-sm leading-relaxed">
+                Combine this with branch protection rules to prevent merging
+                PRs that introduce security regressions.
+              </p>
+            </section>
+
+            {/* Using outputs */}
             <section className="mb-12">
               <h2 className="text-xl font-semibold text-sand-900 mb-4">
                 Using outputs in workflows
               </h2>
               <p className="text-sand-500 text-sm leading-relaxed mb-3">
-                Use the action outputs to conditionally run other steps:
+                Reference the action outputs in subsequent steps to build
+                conditional workflows:
               </p>
-              <CodeBlock>{`- name: Run SupaScanner
+              <CodeBlock title="Conditional notification">{`- name: Run SupaScanner
   id: scan
   uses: NicoCMW/supabase-scanner@v1
   with:
@@ -453,11 +382,17 @@ jobs:
 
 - name: Notify on poor grade
   if: steps.scan.outputs.grade == 'F'
-  run: echo "Security grade is F - review required"`}</CodeBlock>
+  run: echo "Security grade is F - review required"
+
+- name: Upload report artifact
+  uses: actions/upload-artifact@v4
+  with:
+    name: security-report
+    path: \${{ steps.scan.outputs.report-markdown }}`}</CodeBlock>
             </section>
 
             {/* Secrets setup */}
-            <section className="mb-10">
+            <section className="mb-12">
               <h2 className="text-xl font-semibold text-sand-900 mb-4">
                 Setting up secrets
               </h2>
@@ -506,19 +441,59 @@ jobs:
               </div>
             </section>
 
+            {/* Scheduled scans */}
+            <section className="mb-10">
+              <h2 className="text-xl font-semibold text-sand-900 mb-4">
+                Scheduled scans
+              </h2>
+              <p className="text-sand-500 text-sm leading-relaxed mb-3">
+                Run scans on a schedule with the{" "}
+                <code className="bg-sand-100 px-1.5 py-0.5 rounded text-sand-700 text-xs">
+                  schedule
+                </code>{" "}
+                trigger:
+              </p>
+              <CodeBlock title=".github/workflows/weekly-scan.yml">{`name: Weekly Security Scan
+
+on:
+  schedule:
+    - cron: "0 9 * * 1"  # Every Monday at 9am UTC
+
+permissions:
+  contents: read
+
+jobs:
+  scan:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Run SupaScanner
+        uses: NicoCMW/supabase-scanner@v1
+        with:
+          supabase-url: \${{ secrets.SUPABASE_URL }}
+          supabase-anon-key: \${{ secrets.SUPABASE_ANON_KEY }}
+          comment-on-pr: "false"
+          threshold: "medium"`}</CodeBlock>
+              <p className="text-sand-400 text-xs">
+                Disable PR comments for scheduled runs since there is no pull
+                request context.
+              </p>
+            </section>
+
             {/* Navigation */}
             <section className="mt-14 pt-8 border-t border-sand-200 flex items-center justify-between">
               <a
-                href="/docs"
+                href="/docs/cli"
                 className="text-sm text-sand-500 hover:text-sand-900 transition-colors"
               >
-                &larr; Quick Start
+                &larr; CLI
               </a>
               <a
-                href="/docs/github-action"
+                href="/docs/api"
                 className="text-sm text-sand-500 hover:text-sand-900 transition-colors"
               >
-                GitHub Action &rarr;
+                API Reference &rarr;
               </a>
             </section>
           </article>
