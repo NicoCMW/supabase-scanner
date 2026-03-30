@@ -5,6 +5,7 @@ import { FindingCard } from "@/components/finding-card";
 import { ShareButton } from "@/components/share-button";
 import { SocialShareRow } from "@/components/social-share-row";
 import { GetBadgeButton } from "@/components/get-badge-button";
+import { FeedbackWidget } from "@/components/feedback-widget";
 import type { Grade, Severity, FindingCategory, Finding } from "@/types/scanner";
 
 interface FindingRow {
@@ -190,6 +191,14 @@ export default async function ScanDetailPage({ params }: PageProps) {
         <div className="p-4 bg-red-50 border border-red-200 rounded-lg text-red-700 text-sm">
           Scan failed. Please try again.
         </div>
+      )}
+
+      {scanJob.status === "completed" && scanJob.grade && (
+        <FeedbackWidget
+          scanJobId={id}
+          scanGrade={scanJob.grade as string}
+          findingCount={scanJob.total_findings ?? 0}
+        />
       )}
     </main>
   );

@@ -6,6 +6,8 @@ import { ScanForm } from "@/components/scan-form";
 import { ScanResults } from "@/components/scan-results";
 import { PostScanCta } from "@/components/post-scan-cta";
 import { DownloadReportButton } from "@/components/download-report-button";
+import { ComplianceReportButton } from "@/components/compliance-report-button";
+import { FeedbackWidget } from "@/components/feedback-widget";
 import type { Grade, ScanModuleResult, FindingCategory } from "@/types/scanner";
 
 interface ScanResponse {
@@ -75,13 +77,22 @@ function ScanPageInner() {
             durationMs={result.durationMs}
             onReset={handleReset}
           />
-          <div className="w-full max-w-3xl mt-4">
+          <div className="w-full max-w-3xl mt-4 flex flex-wrap gap-3">
             <DownloadReportButton
               scanJobId={result.scanJobId}
               isFreePlan={isFreePlan}
             />
+            <ComplianceReportButton
+              scanJobId={result.scanJobId}
+              isPro={!isFreePlan}
+            />
           </div>
           {isFreePlan && <ScanNudges result={result} />}
+          <FeedbackWidget
+            scanJobId={result.scanJobId}
+            scanGrade={result.grade}
+            findingCount={result.totalFindings}
+          />
         </>
       ) : (
         <div className="flex flex-col items-center">
