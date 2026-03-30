@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { siteConfig } from "@/lib/seo/config";
 import { WaitlistForm } from "@/components/waitlist-form";
+import { LiveStats } from "@/components/live-stats";
 import { SiteHeader } from "@/components/site-header";
 
 export const dynamic = "force-static";
@@ -56,6 +57,8 @@ export default function Home() {
           <WaitlistForm />
         </div>
       </section>
+
+      <LiveStats />
 
       <section className="px-8 py-20 max-w-5xl mx-auto">
         <h2 className="text-2xl font-semibold text-center mb-3 text-sand-900">
@@ -217,6 +220,12 @@ export default function Home() {
           </a>
           <a href="/terms" className="hover:text-sand-600 transition-colors">
             Terms of Service
+          </a>
+          <a
+            href="/acceptable-use"
+            className="hover:text-sand-600 transition-colors"
+          >
+            Acceptable Use
           </a>
         </div>
       </footer>

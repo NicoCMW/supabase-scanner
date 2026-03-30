@@ -208,6 +208,12 @@ export default function PrivacyPage() {
           <a href="/terms" className="hover:text-sand-600 transition-colors">
             Terms of Service
           </a>
+          <a
+            href="/acceptable-use"
+            className="hover:text-sand-600 transition-colors"
+          >
+            Acceptable Use
+          </a>
         </footer>
       </div>
     </main>
