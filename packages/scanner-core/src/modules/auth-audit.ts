@@ -35,6 +35,18 @@ async function checkEmailConfirmation(
           },
           remediation:
             "Enable email confirmation in Supabase Dashboard: Authentication > Settings > Enable email confirmations.",
+          remediationSnippets: [
+            {
+              label: "Enable via Supabase Dashboard",
+              language: "bash",
+              code: `# Supabase Dashboard:\n# Authentication > Settings > Enable email confirmations\n#\n# Or via supabase CLI config (config.toml):\n[auth]\nenable_signup = true\nenable_confirmations = true`,
+            },
+            {
+              label: "Require confirmation in client code",
+              language: "typescript",
+              code: `// After signup, redirect user to confirm email\nconst { data, error } = await supabase.auth.signUp({\n  email: 'user@example.com',\n  password: 'secure-password',\n  options: {\n    emailRedirectTo: 'https://yourapp.com/auth/confirm',\n  },\n});`,
+            },
+          ],
         });
       }
     }
@@ -81,6 +93,13 @@ async function checkUserEnumeration(
           },
           remediation:
             "Ensure signup and recovery endpoints return consistent responses regardless of whether an email exists. Enable 'Secure email change' in Supabase Auth settings.",
+          remediationSnippets: [
+            {
+              label: "Secure email change config",
+              language: "bash",
+              code: `# Supabase Dashboard:\n# Authentication > Settings > Enable "Secure email change"\n#\n# Or via config.toml:\n[auth]\nsecure_email_change = true`,
+            },
+          ],
         });
       }
     }
@@ -129,6 +148,13 @@ async function checkAuthSettingsExposure(
       },
       remediation:
         "This is generally expected behavior for Supabase. Review exposed settings and ensure they match your intended configuration.",
+      remediationSnippets: [
+        {
+          label: "Verify auth settings match expectations",
+          language: "bash",
+          code: `curl -s https://YOUR_PROJECT_REF.supabase.co/auth/v1/settings \\\n  -H "apikey: YOUR_ANON_KEY" | jq .`,
+        },
+      ],
     });
   }
 

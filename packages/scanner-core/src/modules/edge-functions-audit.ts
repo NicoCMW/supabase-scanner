@@ -113,6 +113,18 @@ async function checkAuthenticationBypass(
       },
       remediation:
         "Add JWT verification to your Edge Function. Use the Supabase client library or manually verify the JWT from the Authorization header:\n\nimport { createClient } from '@supabase/supabase-js'\nconst authHeader = req.headers.get('Authorization')\nif (!authHeader) return new Response('Unauthorized', { status: 401 })\n\nAlternatively, set verify_jwt = true in config.toml for this function.",
+      remediationSnippets: [
+        {
+          label: "Enable JWT verification in config.toml",
+          language: "toml",
+          code: `[functions.${fn.name}]\nverify_jwt = true`,
+        },
+        {
+          label: "Add JWT verification in function code",
+          language: "typescript",
+          code: `import { createClient } from 'https://esm.sh/@supabase/supabase-js'\n\nDeno.serve(async (req) => {\n  const authHeader = req.headers.get('Authorization');\n  if (!authHeader) {\n    return new Response(\n      JSON.stringify({ error: 'Missing authorization header' }),\n      { status: 401, headers: { 'Content-Type': 'application/json' } }\n    );\n  }\n\n  const supabase = createClient(\n    Deno.env.get('SUPABASE_URL')!,\n    Deno.env.get('SUPABASE_ANON_KEY')!,\n    { global: { headers: { Authorization: authHeader } } }\n  );\n\n  const { data: { user }, error } = await supabase.auth.getUser();\n  if (error || !user) {\n    return new Response(\n      JSON.stringify({ error: 'Invalid token' }),\n      { status: 401 }\n    );\n  }\n\n  // Proceed with authenticated request...\n});`,
+        },
+      ],
     });
   }
 
@@ -146,6 +158,13 @@ async function checkCorsConfiguration(
       },
       remediation:
         "Restrict the Access-Control-Allow-Origin header to your specific domains instead of using a wildcard. In your Edge Function:\n\nconst corsHeaders = {\n  'Access-Control-Allow-Origin': 'https://yourdomain.com',\n  'Access-Control-Allow-Methods': 'POST, OPTIONS',\n  'Access-Control-Allow-Headers': 'authorization, content-type',\n}",
+      remediationSnippets: [
+        {
+          label: "Set restrictive CORS headers",
+          language: "typescript",
+          code: `const corsHeaders = {\n  'Access-Control-Allow-Origin': 'https://yourdomain.com',\n  'Access-Control-Allow-Methods': 'POST, OPTIONS',\n  'Access-Control-Allow-Headers': 'authorization, content-type',\n};\n\nDeno.serve(async (req) => {\n  if (req.method === 'OPTIONS') {\n    return new Response(null, { headers: corsHeaders });\n  }\n\n  // Your function logic here...\n  return new Response(\n    JSON.stringify({ ok: true }),\n    { headers: { ...corsHeaders, 'Content-Type': 'application/json' } }\n  );\n});`,
+        },
+      ],
     });
   }
 
@@ -170,6 +189,18 @@ function checkSecretLeakage(
         },
         remediation:
           "Never hardcode secrets in Edge Function source code. Use Supabase Vault or Edge Function Secrets:\n\n1. Store secrets: supabase secrets set MY_SECRET=value\n2. Access in code: Deno.env.get('MY_SECRET')\n3. Ensure error handlers do not expose environment variables or stack traces in responses.\n4. Review function code for any console.log or Response body that includes secrets.",
+        remediationSnippets: [
+          {
+            label: "Store secrets via Supabase CLI",
+            language: "bash",
+            code: `# Set secrets for Edge Functions\nsupabase secrets set MY_API_KEY=your-secret-value\nsupabase secrets set STRIPE_SECRET=sk_live_xxx\n\n# List current secrets\nsupabase secrets list`,
+          },
+          {
+            label: "Access secrets safely in Edge Function",
+            language: "typescript",
+            code: `// Access secrets from environment variables\nconst apiKey = Deno.env.get('MY_API_KEY');\nif (!apiKey) {\n  // Log error internally, return generic message\n  console.error('MY_API_KEY not configured');\n  return new Response(\n    JSON.stringify({ error: 'Server configuration error' }),\n    { status: 500 }\n  );\n}`,
+          },
+        ],
       });
     }
   }
@@ -196,6 +227,18 @@ async function checkInvocationPermissions(
       },
       remediation:
         "Configure the function to require authenticated users by setting verify_jwt = true in supabase/config.toml:\n\n[functions.your-function]\nverify_jwt = true\n\nThen in the function, extract the user from the JWT to authorize the request.",
+      remediationSnippets: [
+        {
+          label: "Require JWT in config.toml",
+          language: "toml",
+          code: `[functions.${fn.name}]\nverify_jwt = true`,
+        },
+        {
+          label: "Extract and verify user in function",
+          language: "typescript",
+          code: `import { createClient } from 'https://esm.sh/@supabase/supabase-js'\n\nDeno.serve(async (req) => {\n  const supabase = createClient(\n    Deno.env.get('SUPABASE_URL')!,\n    Deno.env.get('SUPABASE_ANON_KEY')!,\n    {\n      global: {\n        headers: { Authorization: req.headers.get('Authorization')! },\n      },\n    }\n  );\n\n  const { data: { user } } = await supabase.auth.getUser();\n  if (!user) {\n    return new Response('Unauthorized', { status: 401 });\n  }\n\n  // user is now verified - proceed with logic\n});`,
+        },
+      ],
     });
   }
 
@@ -236,6 +279,18 @@ async function checkRateLimiting(
         },
         remediation:
           "Implement rate limiting for your Edge Function. Options include:\n\n1. Use Supabase's built-in rate limiting if available\n2. Implement token bucket or sliding window rate limiting in the function using Supabase KV or a counter table\n3. Use an API gateway or CDN-level rate limiting in front of your functions\n4. Track invocations per IP/user in a Supabase table and reject excess requests.",
+        remediationSnippets: [
+          {
+            label: "Simple rate limiting with Supabase table",
+            language: "sql",
+            code: `-- Create a rate limit tracking table\nCREATE TABLE rate_limits (\n  key text PRIMARY KEY,\n  count integer DEFAULT 1,\n  window_start timestamptz DEFAULT now()\n);\n\nALTER TABLE rate_limits ENABLE ROW LEVEL SECURITY;`,
+          },
+          {
+            label: "Check rate limit in Edge Function",
+            language: "typescript",
+            code: `async function checkRateLimit(\n  supabase: SupabaseClient,\n  key: string,\n  maxRequests = 10,\n  windowSeconds = 60\n): Promise<boolean> {\n  const windowStart = new Date(\n    Date.now() - windowSeconds * 1000\n  ).toISOString();\n\n  const { data } = await supabase\n    .from('rate_limits')\n    .select('count')\n    .eq('key', key)\n    .gte('window_start', windowStart)\n    .single();\n\n  return !data || data.count < maxRequests;\n}`,
+          },
+        ],
       });
     }
   }
@@ -274,6 +329,13 @@ async function checkVerboseErrors(
       },
       remediation:
         "Wrap your Edge Function logic in a try-catch block and return generic error messages:\n\ntry {\n  // function logic\n} catch (error) {\n  console.error(error) // Log internally only\n  return new Response(\n    JSON.stringify({ error: 'Internal server error' }),\n    { status: 500 }\n  )\n}",
+      remediationSnippets: [
+        {
+          label: "Add safe error handling",
+          language: "typescript",
+          code: `Deno.serve(async (req) => {\n  try {\n    // Your function logic here\n    return new Response(\n      JSON.stringify({ ok: true }),\n      { status: 200, headers: { 'Content-Type': 'application/json' } }\n    );\n  } catch (error) {\n    // Log details internally only\n    console.error('Function error:', error);\n    // Return generic message to client\n    return new Response(\n      JSON.stringify({ error: 'Internal server error' }),\n      { status: 500, headers: { 'Content-Type': 'application/json' } }\n    );\n  }\n});`,
+        },
+      ],
     });
   }
 

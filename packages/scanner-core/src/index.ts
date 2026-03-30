@@ -57,10 +57,12 @@ export type {
   Finding,
   FindingCategory,
   Grade,
+  RemediationSnippet,
   ScanModule,
   ScanModuleResult,
   ScanResult,
   ScanTarget,
   Severity,
+  SnippetLanguage,
 } from "./types";
 export type { SupabaseHttpResponse } from "./supabase-client";

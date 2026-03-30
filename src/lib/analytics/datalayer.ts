@@ -103,3 +103,37 @@ export function trackScanShared(): void {
     event: "scan_shared",
   });
 }
+
+export function trackOnboardingStepViewed(step: number, stepName: string): void {
+  pushEvent({
+    event: "onboarding_step_viewed",
+    onboarding_step: step,
+    onboarding_step_name: stepName,
+  });
+}
+
+export function trackOnboardingCompleted(): void {
+  pushEvent({
+    event: "onboarding_completed",
+  });
+}
+
+export function trackOnboardingSkipped(atStep: number): void {
+  pushEvent({
+    event: "onboarding_skipped",
+    onboarding_step: atStep,
+  });
+}
+
+export function trackRemediationSnippetCopied(
+  findingCategory: string,
+  snippetLabel: string,
+  findingTitle: string,
+): void {
+  pushEvent({
+    event: "remediation_snippet_copied",
+    finding_category: findingCategory,
+    snippet_label: snippetLabel,
+    finding_title: findingTitle,
+  });
+}

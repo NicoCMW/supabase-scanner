@@ -54,3 +54,48 @@ export function trackSignup(): void {
 export function trackUpgradeToPro(): void {
   trackEvent({ action: "upgrade_to_pro", category: "monetization" });
 }
+
+export function trackOnboardingStep(step: number, stepName: string): void {
+  trackEvent({
+    action: "onboarding_step_viewed",
+    category: "onboarding",
+    label: stepName,
+    value: step,
+  });
+}
+
+export function trackOnboardingCompleted(): void {
+  trackEvent({ action: "onboarding_completed", category: "onboarding" });
+}
+
+export function trackOnboardingSkipped(atStep: number): void {
+  trackEvent({
+    action: "onboarding_skipped",
+    category: "onboarding",
+    value: atStep,
+  });
+}
+
+export function trackRemediationCopied(findingCategory: string, snippetLabel: string): void {
+  trackEvent({
+    action: "remediation_copied",
+    category: "engagement",
+    label: `${findingCategory}:${snippetLabel}`,
+  });
+}
+
+export function trackRemediationViewed(findingCategory: string): void {
+  trackEvent({
+    action: "remediation_viewed",
+    category: "engagement",
+    label: findingCategory,
+  });
+}
+
+export function trackRemediationUpgradePrompt(findingCategory: string): void {
+  trackEvent({
+    action: "remediation_upgrade_prompt",
+    category: "monetization",
+    label: findingCategory,
+  });
+}

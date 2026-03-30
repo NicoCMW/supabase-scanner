@@ -105,6 +105,18 @@ async function testBucketListAccess(
         objectCount: fileCount,
       },
       remediation: `Restrict the SELECT policy on storage.objects for bucket "${bucket.name}" to authenticated users or specific roles.`,
+      remediationSnippets: [
+        {
+          label: "Restrict listing to authenticated users",
+          language: "sql",
+          code: `CREATE POLICY "authenticated_list_${bucket.name}"\n  ON storage.objects\n  FOR SELECT\n  TO authenticated\n  USING (bucket_id = '${bucket.id}');`,
+        },
+        {
+          label: "Block anonymous listing",
+          language: "sql",
+          code: `CREATE POLICY "deny_anon_list_${bucket.name}"\n  ON storage.objects\n  FOR SELECT\n  TO anon\n  USING (bucket_id != '${bucket.id}');`,
+        },
+      ],
     });
   }
 
@@ -148,6 +160,18 @@ async function testBucketWriteAccess(
         isPublic: bucket.public,
       },
       remediation: `Add a restrictive INSERT policy on storage.objects for bucket "${bucket.name}". Only allow authenticated users to upload.`,
+      remediationSnippets: [
+        {
+          label: "Allow uploads only for authenticated users",
+          language: "sql",
+          code: `CREATE POLICY "auth_upload_${bucket.name}"\n  ON storage.objects\n  FOR INSERT\n  TO authenticated\n  WITH CHECK (bucket_id = '${bucket.id}');`,
+        },
+        {
+          label: "Block anonymous uploads",
+          language: "sql",
+          code: `CREATE POLICY "deny_anon_upload_${bucket.name}"\n  ON storage.objects\n  FOR INSERT\n  TO anon\n  WITH CHECK (false);`,
+        },
+      ],
     });
   }
 
@@ -166,6 +190,13 @@ async function testBucketWriteAccess(
           errorHint: body.slice(0, 200),
         },
         remediation: `Review INSERT policies on storage.objects for bucket "${bucket.name}" and restrict to authenticated users.`,
+        remediationSnippets: [
+          {
+            label: "Restrict uploads to authenticated users",
+            language: "sql",
+            code: `CREATE POLICY "auth_upload_${bucket.name}"\n  ON storage.objects\n  FOR INSERT\n  TO authenticated\n  WITH CHECK (bucket_id = '${bucket.id}');`,
+          },
+        ],
       });
     }
   }
@@ -187,6 +218,13 @@ function checkPublicBucket(bucket: BucketInfo): Finding | null {
         isPublic: true,
       },
       remediation: `If this bucket contains sensitive data, set it to private: UPDATE storage.buckets SET public = false WHERE id = '${bucket.id}';`,
+      remediationSnippets: [
+        {
+          label: "Set bucket to private",
+          language: "sql",
+          code: `UPDATE storage.buckets\n  SET public = false\n  WHERE id = '${bucket.id}';`,
+        },
+      ],
     });
   }
   return null;
@@ -238,6 +276,18 @@ async function checkPublicBucketContentTypes(
       })),
     },
     remediation: `Move sensitive files to a private bucket or set this bucket to private: UPDATE storage.buckets SET public = false WHERE id = '${bucket.id}'; Review whether these files need public access.`,
+    remediationSnippets: [
+      {
+        label: "Set bucket to private",
+        language: "sql",
+        code: `UPDATE storage.buckets\n  SET public = false\n  WHERE id = '${bucket.id}';`,
+      },
+      {
+        label: "Restrict MIME types to safe formats",
+        language: "sql",
+        code: `UPDATE storage.buckets\n  SET allowed_mime_types = '{"image/png","image/jpeg","image/gif","image/webp"}'\n  WHERE id = '${bucket.id}';`,
+      },
+    ],
   });
 }
 
@@ -264,6 +314,18 @@ async function checkStorageObjectsRls(
         hasData,
       },
       remediation: `Ensure RLS is enabled on storage.objects and policies restrict anonymous access:\nALTER TABLE storage.objects ENABLE ROW LEVEL SECURITY;\nRevoke direct REST access to the storage schema if not needed.`,
+      remediationSnippets: [
+        {
+          label: "Enable RLS on storage.objects",
+          language: "sql",
+          code: `ALTER TABLE storage.objects ENABLE ROW LEVEL SECURITY;`,
+        },
+        {
+          label: "Revoke REST access to storage schema",
+          language: "sql",
+          code: `REVOKE ALL ON ALL TABLES IN SCHEMA storage FROM anon;\nREVOKE ALL ON ALL TABLES IN SCHEMA storage FROM authenticated;`,
+        },
+      ],
     });
   }
 
@@ -287,6 +349,13 @@ function checkUploadRestrictions(bucket: BucketInfo): readonly Finding[] {
           fileSizeLimit: null,
         },
         remediation: `Set a file size limit on the bucket: UPDATE storage.buckets SET file_size_limit = 5242880 WHERE id = '${bucket.id}'; (5 MB example, adjust to your needs)`,
+        remediationSnippets: [
+          {
+            label: "Set 5 MB file size limit",
+            language: "sql",
+            code: `UPDATE storage.buckets\n  SET file_size_limit = 5242880\n  WHERE id = '${bucket.id}';`,
+          },
+        ],
       }),
     );
   }
@@ -305,6 +374,13 @@ function checkUploadRestrictions(bucket: BucketInfo): readonly Finding[] {
           allowedMimeTypes: null,
         },
         remediation: `Restrict allowed MIME types on the bucket: UPDATE storage.buckets SET allowed_mime_types = '{"image/png","image/jpeg","image/gif"}' WHERE id = '${bucket.id}'; (adjust types to your needs)`,
+        remediationSnippets: [
+          {
+            label: "Restrict to image types only",
+            language: "sql",
+            code: `UPDATE storage.buckets\n  SET allowed_mime_types = '{"image/png","image/jpeg","image/gif","image/webp"}'\n  WHERE id = '${bucket.id}';`,
+          },
+        ],
       }),
     );
   }
@@ -338,6 +414,18 @@ async function testBucketDeleteAccess(
         bucketId: bucket.id,
       },
       remediation: `Add a restrictive DELETE policy on storage.objects for bucket "${bucket.name}": CREATE POLICY "deny_anon_delete" ON storage.objects FOR DELETE TO anon USING (false);`,
+      remediationSnippets: [
+        {
+          label: "Block anonymous deletes",
+          language: "sql",
+          code: `CREATE POLICY "deny_anon_delete_${bucket.name}"\n  ON storage.objects\n  FOR DELETE\n  TO anon\n  USING (false);`,
+        },
+        {
+          label: "Allow deletes only for file owner",
+          language: "sql",
+          code: `CREATE POLICY "owner_delete_${bucket.name}"\n  ON storage.objects\n  FOR DELETE\n  TO authenticated\n  USING (\n    bucket_id = '${bucket.id}'\n    AND auth.uid() = owner\n  );`,
+        },
+      ],
     });
   }
 
@@ -356,6 +444,13 @@ async function testBucketDeleteAccess(
           errorHint: body.slice(0, 200),
         },
         remediation: `Review DELETE policies on storage.objects for bucket "${bucket.name}" and restrict to authenticated users.`,
+        remediationSnippets: [
+          {
+            label: "Block anonymous deletes",
+            language: "sql",
+            code: `CREATE POLICY "deny_anon_delete_${bucket.name}"\n  ON storage.objects\n  FOR DELETE\n  TO anon\n  USING (false);`,
+          },
+        ],
       });
     }
   }
@@ -390,6 +485,18 @@ async function checkSignedUrlAccess(
         requestedExpiry: 604800,
       },
       remediation: `Restrict signed URL creation to authenticated users by adding a SELECT policy on storage.objects that prevents anonymous access: CREATE POLICY "auth_signed_urls" ON storage.objects FOR SELECT TO anon USING (false);`,
+      remediationSnippets: [
+        {
+          label: "Block anonymous signed URL creation",
+          language: "sql",
+          code: `CREATE POLICY "deny_anon_signed_urls_${bucket.name}"\n  ON storage.objects\n  FOR SELECT\n  TO anon\n  USING (bucket_id != '${bucket.id}');`,
+        },
+        {
+          label: "Allow signed URLs for authenticated users only",
+          language: "sql",
+          code: `CREATE POLICY "auth_signed_urls_${bucket.name}"\n  ON storage.objects\n  FOR SELECT\n  TO authenticated\n  USING (bucket_id = '${bucket.id}');`,
+        },
+      ],
     });
   }
 
@@ -450,6 +557,13 @@ export const storageAuditModule: ScanModule = {
           resource: "storage",
           details: { bucketsFound: 0 },
           remediation: "No action required if storage is not used.",
+          remediationSnippets: [
+            {
+              label: "Verify storage API access",
+              language: "bash",
+              code: `curl -s https://YOUR_PROJECT_REF.supabase.co/storage/v1/bucket \\\n  -H "apikey: YOUR_ANON_KEY" \\\n  -H "Authorization: Bearer YOUR_ANON_KEY"`,
+            },
+          ],
         }),
       );
     }

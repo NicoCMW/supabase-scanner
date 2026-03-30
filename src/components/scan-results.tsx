@@ -1,5 +1,6 @@
 "use client";
 
+import { useCallback, useState } from "react";
 import type { Grade } from "@/types/scanner";
 import type { ScanModuleResult } from "@/types/scanner";
 import { GradeBadge } from "./grade-badge";
@@ -14,6 +15,7 @@ interface ScanResultsProps {
   readonly cached?: boolean;
   readonly cacheAgeSeconds?: number;
   readonly onRescan?: () => void;
+  readonly isPro?: boolean;
 }
 
 function formatCacheAge(seconds: number): string {
@@ -33,6 +35,7 @@ export function ScanResults({
   cached,
   cacheAgeSeconds,
   onRescan,
+  isPro,
 }: ScanResultsProps) {
   const allFindings = modules.flatMap((m) => m.findings);
   const criticalCount = allFindings.filter(
@@ -41,6 +44,12 @@ export function ScanResults({
   const highCount = allFindings.filter((f) => f.severity === "high").length;
   const mediumCount = allFindings.filter((f) => f.severity === "medium").length;
   const lowCount = allFindings.filter((f) => f.severity === "low").length;
+
+  const [snippetsUsed, setSnippetsUsed] = useState(0);
+
+  const handleSnippetUse = useCallback((count: number) => {
+    setSnippetsUsed((prev) => prev + count);
+  }, []);
 
   return (
     <div className="w-full max-w-3xl space-y-8">
@@ -95,7 +104,15 @@ export function ScanResults({
           </h3>
           <div className="space-y-3">
             {mod.findings.map((finding) => (
-              <FindingCard key={finding.id} finding={finding} />
+              <FindingCard
+                key={finding.id}
+                finding={finding}
+                isPro={isPro}
+                snippetsBudget={{
+                  used: snippetsUsed,
+                  onUse: handleSnippetUse,
+                }}
+              />
             ))}
             {mod.findings.length === 0 && (
               <p className="text-sm text-sand-400">No issues found.</p>

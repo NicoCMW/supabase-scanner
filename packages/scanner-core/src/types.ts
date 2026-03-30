@@ -2,6 +2,14 @@ export type Severity = "critical" | "high" | "medium" | "low";
 
 export type FindingCategory = "rls" | "storage" | "auth" | "edge-functions";
 
+export type SnippetLanguage = "sql" | "typescript" | "toml" | "json" | "bash";
+
+export interface RemediationSnippet {
+  readonly label: string;
+  readonly language: SnippetLanguage;
+  readonly code: string;
+}
+
 export interface Finding {
   readonly id: string;
   readonly title: string;
@@ -11,6 +19,7 @@ export interface Finding {
   readonly resource: string;
   readonly details: Record<string, unknown>;
   readonly remediation: string;
+  readonly remediationSnippets?: readonly RemediationSnippet[];
 }
 
 export interface ScanTarget {

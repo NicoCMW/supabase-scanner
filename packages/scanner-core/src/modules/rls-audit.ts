@@ -43,6 +43,8 @@ async function testTableAccess(
     const isEmpty = Array.isArray(data) && data.length === 0;
 
     if (hasData) {
+      const columns = Object.keys((data as Record<string, unknown>[])[0] ?? {});
+      const hasIdColumn = columns.includes("id");
       return createFinding({
         title: `Table "${table.name}" is publicly readable with data exposed`,
         description: `The table "${table.name}" returned data when queried with the anonymous key. This means either RLS is disabled or there is a permissive SELECT policy that allows anonymous access. Real user data may be exposed.`,
@@ -53,9 +55,28 @@ async function testTableAccess(
           table: table.name,
           schema: table.schema,
           rowsReturned: (data as unknown[]).length,
-          sampleColumns: Object.keys((data as Record<string, unknown>[])[0] ?? {}),
+          sampleColumns: columns,
         },
         remediation: `Enable RLS on the "${table.name}" table and create appropriate SELECT policies. Run: ALTER TABLE ${table.schema}.${table.name} ENABLE ROW LEVEL SECURITY;`,
+        remediationSnippets: [
+          {
+            label: "Enable Row Level Security",
+            language: "sql",
+            code: `ALTER TABLE ${table.schema}.${table.name} ENABLE ROW LEVEL SECURITY;`,
+          },
+          {
+            label: "Allow authenticated users to read own rows",
+            language: "sql",
+            code: hasIdColumn
+              ? `CREATE POLICY "${table.name}_select_own"\n  ON ${table.schema}.${table.name}\n  FOR SELECT\n  TO authenticated\n  USING (auth.uid() = id);`
+              : `CREATE POLICY "${table.name}_select_authenticated"\n  ON ${table.schema}.${table.name}\n  FOR SELECT\n  TO authenticated\n  USING (true);`,
+          },
+          {
+            label: "Block anonymous access completely",
+            language: "sql",
+            code: `CREATE POLICY "${table.name}_deny_anon"\n  ON ${table.schema}.${table.name}\n  FOR ALL\n  TO anon\n  USING (false);`,
+          },
+        ],
       });
     }
 
@@ -72,6 +93,18 @@ async function testTableAccess(
           rowsReturned: 0,
         },
         remediation: `Enable RLS on the "${table.name}" table. Run: ALTER TABLE ${table.schema}.${table.name} ENABLE ROW LEVEL SECURITY;`,
+        remediationSnippets: [
+          {
+            label: "Enable Row Level Security",
+            language: "sql",
+            code: `ALTER TABLE ${table.schema}.${table.name} ENABLE ROW LEVEL SECURITY;`,
+          },
+          {
+            label: "Restrict to authenticated users only",
+            language: "sql",
+            code: `CREATE POLICY "${table.name}_authenticated_only"\n  ON ${table.schema}.${table.name}\n  FOR ALL\n  TO authenticated\n  USING (true);`,
+          },
+        ],
       });
     }
   }
@@ -115,6 +148,18 @@ async function testTableInsert(
           httpStatus: response.status,
         },
         remediation: `Add a restrictive INSERT policy to "${table.name}" or disable anonymous inserts. Example: CREATE POLICY "deny_anon_insert" ON ${table.schema}.${table.name} FOR INSERT TO anon USING (false);`,
+        remediationSnippets: [
+          {
+            label: "Block anonymous inserts",
+            language: "sql",
+            code: `CREATE POLICY "${table.name}_deny_anon_insert"\n  ON ${table.schema}.${table.name}\n  FOR INSERT\n  TO anon\n  USING (false);`,
+          },
+          {
+            label: "Allow inserts only for own data",
+            language: "sql",
+            code: `CREATE POLICY "${table.name}_insert_own"\n  ON ${table.schema}.${table.name}\n  FOR INSERT\n  TO authenticated\n  WITH CHECK (auth.uid() = user_id);`,
+          },
+        ],
       });
     }
   }
@@ -153,6 +198,13 @@ export const rlsAuditModule: ScanModule = {
           resource: "schema",
           details: { tablesFound: 0 },
           remediation: "Verify the Supabase URL and anon key are correct.",
+          remediationSnippets: [
+            {
+              label: "Verify your Supabase connection",
+              language: "bash",
+              code: `curl -s https://YOUR_PROJECT_REF.supabase.co/rest/v1/ \\\n  -H "apikey: YOUR_ANON_KEY" \\\n  -H "Accept: application/openapi+json" | head -c 200`,
+            },
+          ],
         }),
       );
     }

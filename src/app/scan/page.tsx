@@ -91,6 +91,7 @@ function ScanPageInner() {
             cached={result.cached}
             cacheAgeSeconds={result.cacheAgeSeconds}
             onRescan={handleRescan}
+            isPro={!isFreePlan}
           />
           <div className="w-full max-w-3xl mt-4 flex flex-wrap gap-3">
             <DownloadReportButton
