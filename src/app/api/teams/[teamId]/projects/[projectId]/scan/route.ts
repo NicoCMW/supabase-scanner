@@ -3,8 +3,9 @@ import * as Sentry from "@sentry/nextjs";
 import { createSupabaseServer } from "@/lib/supabase/server";
 import { createSupabaseAdmin } from "@/lib/supabase/admin";
 import { runScan, validateTarget } from "@/lib/scanner";
-import { checkScanAllowed, incrementUsage } from "@/lib/billing/usage";
+import { checkScanAllowed, getUserPlan, incrementUsage } from "@/lib/billing/usage";
 import { isStripeConfigured } from "@/lib/billing/config";
+import { checkScanRateLimits, checkProjectRateLimit, rateLimitResponse } from "@/lib/rate-limit";
 import {
   requireTeamRole,
   isTeamMembership,
@@ -44,6 +45,19 @@ export async function POST(request: NextRequest, context: RouteContext) {
     return roleResult;
   }
 
+  // Rate limit: per-user burst + per-IP hourly
+  const adminClient = createSupabaseAdmin();
+  const plan = await getUserPlan(supabase, user.id);
+  const preScanLimits = await checkScanRateLimits(
+    adminClient,
+    request,
+    user.id,
+    plan,
+  );
+  if (!preScanLimits.allowed) {
+    return rateLimitResponse(preScanLimits.retryAfterSeconds);
+  }
+
   // Verify project exists and belongs to team
   const { data: project } = await supabase
     .from("team_projects")
@@ -57,6 +71,18 @@ export async function POST(request: NextRequest, context: RouteContext) {
       { error: "Project not found" },
       { status: 404 },
     );
+  }
+
+  // Rate limit: per-project daily
+  const projectLimitResult = await checkProjectRateLimit(
+    adminClient,
+    request,
+    user.id,
+    plan,
+    project.supabase_url,
+  );
+  if (!projectLimitResult.allowed) {
+    return rateLimitResponse(projectLimitResult.retryAfterSeconds);
   }
 
   // Check usage limits against the scanning user's plan
@@ -172,7 +198,6 @@ export async function POST(request: NextRequest, context: RouteContext) {
       .eq("id", projectId);
 
     // Increment usage
-    const adminClient = createSupabaseAdmin();
     await incrementUsage(adminClient, user.id);
 
     return NextResponse.json({

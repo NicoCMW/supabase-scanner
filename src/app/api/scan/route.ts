@@ -3,9 +3,9 @@ import * as Sentry from "@sentry/nextjs";
 import { runScan, validateTarget } from "@/lib/scanner";
 import { createSupabaseServer } from "@/lib/supabase/server";
 import { createSupabaseAdmin } from "@/lib/supabase/admin";
-import { checkScanAllowed, incrementUsage } from "@/lib/billing/usage";
+import { checkScanAllowed, getUserPlan, incrementUsage } from "@/lib/billing/usage";
 import { isStripeConfigured } from "@/lib/billing/config";
-import { checkRateLimit, rateLimitResponse, RATE_LIMITS } from "@/lib/rate-limit";
+import { checkScanRateLimits, checkProjectRateLimit, rateLimitResponse } from "@/lib/rate-limit";
 import { getOrCreatePreferences, buildUnsubscribeUrl } from "@/lib/email/preferences";
 import { sendScanResultsEmail } from "@/lib/email/send";
 import { notifySlackOnScanComplete } from "@/lib/slack/notifications";
@@ -27,14 +27,19 @@ export async function POST(request: NextRequest) {
     );
   }
 
-  // Rate limit: prevent request flooding independent of usage quotas
   const adminClient = createSupabaseAdmin();
-  const rateLimitAllowed = await checkRateLimit(
+  const plan = await getUserPlan(supabase, user.id);
+
+  // Rate limit: per-user burst + per-IP hourly (before parsing body)
+  const preScanLimits = await checkScanRateLimits(
     adminClient,
-    `scan:${user.id}`,
-    RATE_LIMITS.scan,
+    request,
+    user.id,
+    plan,
   );
-  if (!rateLimitAllowed) return rateLimitResponse();
+  if (!preScanLimits.allowed) {
+    return rateLimitResponse(preScanLimits.retryAfterSeconds);
+  }
 
   // Check usage limits before proceeding
   const { allowed, reason, usage } = await checkScanAllowed(
@@ -75,6 +80,18 @@ export async function POST(request: NextRequest) {
     supabaseUrl: supabaseUrl.trim().replace(/\/+$/, ""),
     anonKey: anonKey.trim(),
   };
+
+  // Rate limit: per-project daily (now that we know the target URL)
+  const projectLimitResult = await checkProjectRateLimit(
+    adminClient,
+    request,
+    user.id,
+    plan,
+    target.supabaseUrl,
+  );
+  if (!projectLimitResult.allowed) {
+    return rateLimitResponse(projectLimitResult.retryAfterSeconds);
+  }
 
   const validation = validateTarget(target);
   if (!validation.valid) {
@@ -137,7 +154,6 @@ export async function POST(request: NextRequest) {
       .eq("id", scanJob.id);
 
     // Increment usage counter after successful scan (service role bypasses RLS)
-    const adminClient = createSupabaseAdmin();
     await incrementUsage(adminClient, user.id);
 
     // Send scan results email (fire-and-forget, don't block response)
