@@ -2,6 +2,8 @@ import type { ScanModule, ScanResult, ScanTarget } from "./types";
 import { rlsAuditModule } from "./modules/rls-audit";
 import { storageAuditModule } from "./modules/storage-audit";
 import { authAuditModule } from "./modules/auth-audit";
+import { authSecurityModule } from "./modules/auth-security";
+import { edgeFunctionsAuditModule } from "./modules/edge-functions-audit";
 import { computeGrade } from "./utils";
 import { validateTarget } from "./supabase-client";
 
@@ -9,6 +11,8 @@ const DEFAULT_MODULES: readonly ScanModule[] = [
   rlsAuditModule,
   storageAuditModule,
   authAuditModule,
+  authSecurityModule,
+  edgeFunctionsAuditModule,
 ];
 
 export async function runScan(
@@ -47,6 +51,8 @@ export { computeGrade, createFinding } from "./utils";
 export { rlsAuditModule } from "./modules/rls-audit";
 export { storageAuditModule } from "./modules/storage-audit";
 export { authAuditModule } from "./modules/auth-audit";
+export { authSecurityModule } from "./modules/auth-security";
+export { edgeFunctionsAuditModule } from "./modules/edge-functions-audit";
 export type {
   Finding,
   FindingCategory,

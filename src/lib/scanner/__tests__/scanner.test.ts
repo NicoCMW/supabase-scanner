@@ -27,11 +27,13 @@ describe("runScan", () => {
     const result = await runScan(target);
 
     expect(result.target).toEqual(target);
-    expect(result.modules).toHaveLength(3);
+    expect(result.modules).toHaveLength(5);
     expect(result.modules.map((m) => m.module)).toEqual([
       "RLS Audit",
       "Storage Audit",
       "Auth Audit",
+      "Auth Security",
+      "Edge Functions Audit",
     ]);
     expect(["A", "B", "C", "D", "F"]).toContain(result.grade);
     expect(result.totalFindings).toBeGreaterThanOrEqual(0);

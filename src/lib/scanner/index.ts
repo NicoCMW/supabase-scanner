@@ -5,4 +5,6 @@ export {
   rlsAuditModule,
   storageAuditModule,
   authAuditModule,
+  authSecurityModule,
+  edgeFunctionsAuditModule,
 } from "@supascanner/core";

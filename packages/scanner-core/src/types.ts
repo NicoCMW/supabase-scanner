@@ -1,6 +1,6 @@
 export type Severity = "critical" | "high" | "medium" | "low";
 
-export type FindingCategory = "rls" | "storage" | "auth";
+export type FindingCategory = "rls" | "storage" | "auth" | "edge-functions";
 
 export interface Finding {
   readonly id: string;
