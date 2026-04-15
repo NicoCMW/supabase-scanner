@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { getAllSlugs, getPostBySlug } from "@/lib/seo/blog";
 import { siteConfig } from "@/lib/seo/config";
-import { techArticleJsonLd } from "@/lib/seo/json-ld";
+import { techArticleJsonLd, faqJsonLd } from "@/lib/seo/json-ld";
 import { Breadcrumbs } from "@/components/breadcrumbs";
 
 interface BlogPostPageProps {
@@ -97,6 +97,13 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: techArticleJsonLd(post) }}
         />
+
+        {post.faqs && post.faqs.length > 0 && (
+          <script
+            type="application/ld+json"
+            dangerouslySetInnerHTML={{ __html: faqJsonLd(post.faqs) }}
+          />
+        )}
 
         <Breadcrumbs
           items={[

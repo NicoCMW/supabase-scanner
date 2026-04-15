@@ -1,5 +1,5 @@
 import { siteConfig } from "./config";
-import type { BlogPost, BreadcrumbItem } from "./types";
+import type { BlogPost, BreadcrumbItem, FaqEntry } from "./types";
 
 export function techArticleJsonLd(post: BlogPost): string {
   return JSON.stringify({
@@ -42,6 +42,21 @@ export function softwareApplicationJsonLd(): string {
       priceCurrency: "USD",
       description: "Free tier: 3 scans per month",
     },
+  });
+}
+
+export function faqJsonLd(entries: readonly FaqEntry[]): string {
+  return JSON.stringify({
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    mainEntity: entries.map((entry) => ({
+      "@type": "Question",
+      name: entry.question,
+      acceptedAnswer: {
+        "@type": "Answer",
+        text: entry.answer,
+      },
+    })),
   });
 }
 

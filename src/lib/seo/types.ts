@@ -1,5 +1,10 @@
 import type { BlogCategory } from "./config";
 
+export interface FaqEntry {
+  readonly question: string;
+  readonly answer: string;
+}
+
 export interface BlogPost {
   readonly slug: string;
   readonly title: string;
@@ -8,6 +13,7 @@ export interface BlogPost {
   readonly publishedAt: string;
   readonly updatedAt?: string;
   readonly keywords: readonly string[];
+  readonly faqs?: readonly FaqEntry[];
   readonly body: string;
 }
 
