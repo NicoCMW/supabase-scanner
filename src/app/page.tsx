@@ -7,10 +7,20 @@ import { ExperimentTracker } from "@/components/experiment-tracker";
 import { getVariant, getAllVariants } from "@/lib/ab-testing/server";
 
 export const metadata: Metadata = {
-  title: "SupaScanner - Find RLS Gaps Before Your Users Do",
+  title: {
+    absolute: "SupaScanner - Find RLS Gaps Before Your Users Do",
+  },
   description: siteConfig.description,
   alternates: {
     canonical: siteConfig.url,
+  },
+  openGraph: {
+    title: "SupaScanner - Find RLS Gaps Before Your Users Do",
+    description: siteConfig.description,
+    url: siteConfig.url,
+    type: "website",
+    siteName: siteConfig.name,
+    images: [{ url: siteConfig.ogImage, width: 1200, height: 630 }],
   },
 };
 
